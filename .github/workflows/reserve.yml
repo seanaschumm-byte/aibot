@@ -1,4 +1,4 @@
-name: smart-reserve-bot
+name: "$ Bot 5 - Smart Reserve"
 
 on:
   schedule:

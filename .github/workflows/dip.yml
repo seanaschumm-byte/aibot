@@ -1,4 +1,4 @@
-name: crypto-dip-bot
+name: "Bot 3 - Crypto daily dip"
 
 on:
   schedule:

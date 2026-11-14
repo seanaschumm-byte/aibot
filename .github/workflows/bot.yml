@@ -1,4 +1,4 @@
-name: trading-bot
+name: "Bot 1 - Stocks VWAP dip"
 
 on:
   schedule:

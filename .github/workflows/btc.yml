@@ -1,4 +1,4 @@
-name: btc-risk-bot
+name: "Bot 2 - BTC risk"
 
 on:
   schedule:

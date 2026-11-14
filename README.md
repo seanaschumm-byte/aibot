@@ -1,4 +1,14 @@
-# AI bot: VWAP pullback paper trader
+# AI trading bots (Alpaca paper)
+
+| # | Bot | Market | Order label |
+|---|---|---|---|
+| 1 | Stocks VWAP dip | US stocks, intraday | `aibot-` |
+| 2 | BTC risk | BTC breakouts | `btcbot-` |
+| 3 | Crypto daily dip | €25/day, sell +20% | `dip25-` |
+| 4 | Weekly dip | €175/week grid, sell +12% | `dip10-` |
+| $ 5 | Smart Reserve | €500 + €100/week pot, €25 per dip | `rsv-` |
+
+# Bot 1 - Stocks VWAP dip (`bot.py`)
 
 An intraday "buy the dip in an uptrend" bot for an **Alpaca paper account**. GitHub Actions runs it every 10 minutes during US market hours.
 
@@ -65,7 +75,7 @@ python bot.py report                      # performance since the start date
 
 ---
 
-# BTC risk bot (`crypto_bot.py`)
+# Bot 2 - BTC risk (`crypto_bot.py`)
 
 An aggressive Bitcoin trend bot on the same Alpaca paper account. It runs **every hour, 24/7**, starting 14 Nov 2026.
 
@@ -107,7 +117,7 @@ Trend-breakout systems typically **lose on most trades** (often 60–70%) and re
 
 ---
 
-# Crypto dip bot (`dip_bot.py`)
+# Bot 3 - Crypto daily dip (`dip_bot.py`)
 
 The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7.
 
@@ -126,7 +136,7 @@ The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7
 
 ---
 
-# Weekly dip bot (`weekly_dip_bot.py`)
+# Bot 4 - Weekly dip (`weekly_dip_bot.py`)
 
 - **Budget:** €175 per week, from ISO week 46 (14 Nov 2026) through week 50 (13 Dec), so 5 deposits = €875. Money that isn't used rolls over to the next week, and profits are reinvested.
 - **Weekly reference price:** every Monday the bot computes each coin's average price (VWAP) over the last 7 days and logs it.
@@ -193,7 +203,7 @@ Automatic tuning only makes sense after about 30 trades per bot. Before that, pa
 
 ---
 
-# Smart Reserve bot (`reserve_bot.py`)
+# $ Bot 5 - Smart Reserve (`reserve_bot.py`)
 
 Opportunistic dip buying from one shared euro pot ("Smart Reserve DCA").
 

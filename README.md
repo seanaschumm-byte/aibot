@@ -7,6 +7,8 @@
 | 3 | Crypto daily dip | €25/day, sell +20% | `dip25-` |
 | 4 | Weekly dip | €175/week grid, sell +12% | `dip10-` |
 | $ 5 | Smart Reserve | €500 + €100/week pot, €25 per dip | `rsv-` |
+| 6 | **Sean Lavarge** (`sean_lavarge/`) | BTC/ETH/SOL futures, up to 10× isolated, long + short. Binance testnet, not Alpaca. | Binance testnet |
+| 7 | **Sean Realistisch** (`sean_realistisch/`) | SPY/QQQ, 2× SSO/QLD in a bull market, GLD. $500 + $300/month, no margin. | `sr-` |
 
 # Bot 1 - Stocks VWAP dip (`bot.py`)
 

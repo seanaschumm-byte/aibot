@@ -12,6 +12,8 @@ The top 3 of the 6-month replay (16 May – 14 Nov 2026, `compare_6m.py`). All o
 
 | **MACD Nasdaq** ([`macd_nasdaq/`](macd_nasdaq/strategy.py)) | Winner of the 8-month test of 14 known strategies. QQQ in when MACD(12,26,9) is above its signal line, and also buys 12% dips (vs the 3-month high). Each buy: 50% sold at +12%, the rest at +25%, or at +18% if it falls back after passing it. MACD sell signal sells all. Money from sales goes into the next buy. €500 + €100/week. | added 14 Nov 2026 | `mn-` |
 
+| **Botsi** ([`botsi/`](botsi/bot.py)) | The MACD Nasdaq rules (MACD in/out, 12% dips, 50% at +12%, rest at +25% / floor +18%) on **BTC, ETH and SOL**, 24/7, one third each. €500 + €100/week. | added 14 Nov 2026 | `bs-` |
+
 Also in the account: **5 manual crypto trades** (`manual25-`) with a +30% take-profit and a −40% stop-loss guard (`manual_guard.py`, every 15 min).
 
 Removed on 14 Nov 2026: Bots 1–4 (stocks VWAP dip, BTC risk, crypto daily dip, weekly dip) and Market Making. They are still in the git history.

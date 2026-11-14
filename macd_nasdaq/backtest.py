@@ -20,13 +20,16 @@ H = {"APCA-API-KEY-ID": os.getenv("ALPACA_API_KEY", "proxy-injected"),
      "APCA-API-SECRET-KEY": os.getenv("ALPACA_SECRET_KEY", "proxy-injected")}
 
 
-def download(months: float) -> pd.DataFrame:
+def download(months: float, symbol: str = "QQQ") -> pd.DataFrame:
     start = (pd.Timestamp.now(tz="UTC") - pd.Timedelta(days=int(months * 30.44) + 200)).isoformat()
-    params, rows = {"symbols": "QQQ", "timeframe": "1Day", "start": start, "limit": 10000,
-                    "feed": "iex", "adjustment": "all"}, []
+    crypto = "/" in symbol
+    url = "https://data.alpaca.markets/" + ("v1beta3/crypto/us/bars" if crypto else "v2/stocks/bars")
+    params, rows = {"symbols": symbol, "timeframe": "1Day", "start": start, "limit": 10000}, []
+    if not crypto:
+        params.update({"feed": "iex", "adjustment": "all"})
     while True:
-        js = requests.get("https://data.alpaca.markets/v2/stocks/bars", headers=H, params=params, timeout=60).json()
-        rows += (js.get("bars") or {}).get("QQQ", [])
+        js = requests.get(url, headers=H, params=params, timeout=60).json()
+        rows += (js.get("bars") or {}).get(symbol, [])
         if not js.get("next_page_token"):
             break
         params["page_token"] = js["next_page_token"]
@@ -35,13 +38,14 @@ def download(months: float) -> pd.DataFrame:
     return df.set_index("t").rename(columns={"o": "open", "h": "high", "l": "low", "c": "close"})
 
 
-def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules()) -> dict:
+def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(), start_eur: float = 500.0,
+             weekly_eur: float = 100.0, fee: float = 0.0) -> dict:
     """mode: 'new' (dips + profit rules), 'macd' (plain crossover), 'dca' (buy every week)."""
     macd, dip = macd_state(df["close"], r), in_dip(df["close"], r)
     days = [t for t in df.index if t >= start]
-    cash, deposited, lots, curve, closed, week = 500 * EURUSD, 500.0, [], [], [], None
+    cash, deposited, lots, curve, closed, week = start_eur * EURUSD, start_eur, [], [], [], None
     pending_buy = pending_exit = False
-    slip = 0.0005
+    slip = 0.0005 + fee
 
     def buy(t, usd, px):
         nonlocal cash
@@ -62,9 +66,9 @@ def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(
         b = df.loc[t]
         dep = 0.0
         if i > 0 and t.isocalendar()[:2] != week:
-            dep = 100 * EURUSD
+            dep = weekly_eur * EURUSD
             cash += dep
-            deposited += 100
+            deposited += weekly_eur
         week = t.isocalendar()[:2]
         prev = df.index[df.index.get_loc(t) - 1]
         long_, dip_ = bool(macd.loc[prev]), bool(dip.loc[prev])     # yesterday's close decides today
@@ -118,22 +122,56 @@ def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(
             "dd": float((twr / twr.cummax() - 1).min()),
             "sharpe": float(ret.mean() / ret.std() * math.sqrt(252)) if ret.std() else 0.0,
             "buys": len(closed) + len(lots), "wins": wins, "closed": len(done),
-            "cash_now": cash / EURUSD}
+            "cash_now": cash / EURUSD, "curve": curve}
+
+
+ALL_MARKETS = {"QQQ": ("QQQ", 63, 0.0), "BTC": ("BTC/USD", 90, 0.0025), "ETH": ("ETH/USD", 90, 0.0025),
+               "SOL": ("SOL/USD", 90, 0.0025)}
+# MACD Nasdaq = QQQ; Botsi = BTC,ETH,SOL (set MARKETS=BTC,ETH,SOL)
+MARKETS = {t: ALL_MARKETS[t] for t in os.getenv("MARKETS", "QQQ").split(",")}
+TITLE = os.getenv("TITLE", "MACD Nasdaq")
+
+
+def combine(curves: list[list[tuple]]) -> dict:
+    """Sum the sleeves' equity day by day (stocks are carried over weekends) -> one portfolio."""
+    frames = []
+    for c in curves:
+        f = pd.DataFrame(c, columns=["t", "e", "d"]).set_index("t")
+        frames.append(f)
+    idx = sorted(set().union(*[f.index for f in frames]))
+    e = sum(f["e"].reindex(idx).ffill().fillna(0) for f in frames)
+    d = sum(f["d"].reindex(idx).fillna(0) for f in frames)
+    p = e.shift(1)
+    ret = ((e - d - p) / p).replace([float("inf")], 0).fillna(0)
+    twr = (1 + ret).cumprod()
+    return {"final": float(e.iloc[-1]) / EURUSD, "ret": float(twr.iloc[-1] - 1),
+            "dd": float((twr / twr.cummax() - 1).min()),
+            "sharpe": float(ret.mean() / ret.std() * math.sqrt(365)) if ret.std() else 0.0}
 
 
 def main() -> None:
     months = float(sys.argv[1]) if len(sys.argv) > 1 else 8
-    df = download(max(months, 8))
-    start = df.index[-1] - pd.Timedelta(days=int(months * 30.44))
-    lines = [f"## MACD Nasdaq backtest, last {months:g} months ({start:%Y-%m-%d} to {df.index[-1]:%Y-%m-%d}), "
-             "EUR 500 + EUR 100/week", "",
-             "| Version | Deposited | End value | Profit | Return (excl. deposits) | Max drawdown | Sharpe | Buys | Cash now |",
-             "|---|---|---|---|---|---|---|---|---|"]
+    data = {tag: download(max(months, 8), sym) for tag, (sym, _, _) in MARKETS.items()}
+    end = min(df.index[-1] for df in data.values())
+    data = {tag: df.loc[:end] for tag, df in data.items()}            # same end date for every market
+    start = end - pd.Timedelta(days=int(months * 30.44))
+    share = 1 / len(MARKETS)
+    lines = [f"## {TITLE} backtest ({', '.join(MARKETS)}), last {months:g} months ({start:%Y-%m-%d} to {end:%Y-%m-%d}), "
+             f"EUR 500 + EUR 100/week, {share:.0%} per market", "",
+             "| Version | Deposited | End value | Profit | Return (excl. deposits) | Max drawdown | Sharpe |",
+             "|---|---|---|---|---|---|---|"]
+    per_market = []
     for name, mode in (("**New: MACD + 12% dips + 12/18/25% profit rules**", "new"),
-                       ("Plain MACD crossover", "macd"), ("Buy QQQ every week", "dca")):
-        m = simulate(df, start, mode)
-        lines.append(f"| {name} | EUR {m['deposited']:,.0f} | EUR {m['final']:,.0f} | EUR {m['final'] - m['deposited']:+,.0f} | "
-                     f"**{m['ret']:+.1%}** | {m['dd']:.1%} | {m['sharpe']:.2f} | {m['buys']} | EUR {m['cash_now']:,.0f} |")
+                       ("Plain MACD crossover", "macd"), ("Buy every week", "dca")):
+        runs = {tag: simulate(data[tag], start, mode, Rules(dip_lookback=lb), 500.0 * share, 100.0 * share, fee)
+                for tag, (_, lb, fee) in MARKETS.items()}
+        tot = combine([r["curve"] for r in runs.values()])
+        dep = sum(r["deposited"] for r in runs.values())
+        lines.append(f"| {name} | EUR {dep:,.0f} | EUR {tot['final']:,.0f} | EUR {tot['final'] - dep:+,.0f} | "
+                     f"**{tot['ret']:+.1%}** | {tot['dd']:.1%} | {tot['sharpe']:.2f} |")
+        if mode == "new":
+            per_market = [f"{tag} {r['ret']:+.1%} (EUR {r['final'] - r['deposited']:+,.0f})" for tag, r in runs.items()]
+    lines += ["", "New version per market: " + ", ".join(per_market)]
     text = "\n".join(lines)
     print(text)
     if os.getenv("GITHUB_STEP_SUMMARY"):

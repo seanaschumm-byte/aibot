@@ -1,8 +1,8 @@
-name: "MACD Nasdaq - backtest"
+name: "MACD Nasdaq + Botsi - backtest"
 
 on:
   push:
-    paths: ["macd_nasdaq/**.py", ".github/workflows/macd_nasdaq_test.yml"]
+    paths: ["macd_nasdaq/**.py", "botsi/**.py", ".github/workflows/macd_nasdaq_test.yml"]
   workflow_dispatch:
 
 jobs:
@@ -22,4 +22,10 @@ jobs:
       - name: Backtest last 8 months
         run: python -m macd_nasdaq.backtest 8
       - name: Backtest last 24 months
+        run: python -m macd_nasdaq.backtest 24
+      - name: Botsi (BTC, ETH, SOL) last 8 months
+        env: {MARKETS: "BTC,ETH,SOL", TITLE: Botsi}
+        run: python -m macd_nasdaq.backtest 8
+      - name: Botsi (BTC, ETH, SOL) last 24 months
+        env: {MARKETS: "BTC,ETH,SOL", TITLE: Botsi}
         run: python -m macd_nasdaq.backtest 24

@@ -13,7 +13,7 @@ import os
 import sys
 import time
 
-from bot import api, eurusd, DATA_URL, DRY_RUN
+from common import api, eurusd, DATA_URL, DRY_RUN
 import journal
 import market
 from reserve_strategy import CAPS, Rules, check_buy, check_sell

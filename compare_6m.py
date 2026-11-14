@@ -2,8 +2,7 @@
 with its own deposit schedule, then ranks them by time-weighted return (deposits excluded).
 
   python compare_6m.py        (needs ALPACA_API_KEY / ALPACA_SECRET_KEY; runs in GitHub Actions)
-Bots: $ Bot 5 (Smart Reserve), Sean Realistisch, Sean Lavarge (futures 10x and ~4x ETF version),
-Market Making, and 'just buy SPY' / 'just buy BTC' with the same deposits as $ Bot 5 for reference.
+Bots: $ Bot 5 (Smart Reserve), Sean Realistisch, Sean Lavarge (futures 10x and ~4x ETF version), and 'just buy SPY' / 'just buy BTC' with the same deposits as $ Bot 5 for reference.
 """
 from __future__ import annotations
 
@@ -160,27 +159,11 @@ def sean_lavarge(max_lev: int) -> dict:
             "note": f"win rate {m['win_rate']:.0%}, {m['breaker_pauses']} breaker pauses"}
 
 
-# ---------------------------------------------------------------- Market Making
-def market_making() -> dict:
-    from market_making.backtest import simulate
-    pnl, fees, n, dds = 0.0, 0.0, 0, []
-    for coin in ("BTC/USD", "ETH/USD"):
-        bars = crypto_bars([coin], "1Min", START)[coin]
-        b = [{"h": h, "l": l, "c": c} for h, l, c in zip(bars["high"], bars["low"], bars["close"])]
-        r = simulate(b, every=5)
-        pnl += r["pnl"]
-        fees += r["fees"]
-        n += r["buys"] + r["sells"]
-    return {"name": "Market Making (every 5 min)", "deposited": 500 / EURUSD, "final": (500 + pnl) / EURUSD,
-            "ret": pnl / 500, "dd": float("nan"), "trades": n, "note": f"fees ${fees:.0f}"}
-
-
 def main() -> None:
     import sys
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     results = []
-    for fn, args in ((smart_reserve, ()), (sean_realistisch, ()), (sean_lavarge, (4,)), (sean_lavarge, (10,)),
-                     (market_making, ())):
+    for fn, args in ((smart_reserve, ()), (sean_realistisch, ()), (sean_lavarge, (4,)), (sean_lavarge, (10,))):
         try:
             results.append(fn(*args))
             print("done:", results[-1]["name"], flush=True)

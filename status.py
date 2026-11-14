@@ -19,14 +19,9 @@ NL = ZoneInfo("Europe/Amsterdam")
 CRYPTO_FEE = 0.0025
 
 BOTS = [  # prefix, name, what it does
-    ("aibot", "Bot 1 - Stocks VWAP dip (stopped)", "US stocks intraday, EUR 75/week budget"),
-    ("btcbot", "Bot 2 - BTC risk (stopped)", "BTC breakouts, 5 trades of EUR 100"),
-    ("dip25", "Bot 3 - Crypto daily dip (stopped)", "EUR 25/day on dips in an uptrend, sells at +20%"),
-    ("dip10", "Bot 4 - Weekly dip (stopped)", "EUR 175/week grid -10..-30% under weekly average, sells at +12%"),
     ("rsv", "$ Bot 5 - Smart Reserve", "EUR 500 + EUR 100/week pot, EUR 25 per dip"),
     ("sl", "Sean Lavarge", "2x crypto ETFs (BITU/ETHT/SOLZ, SBIT/ETHD), EUR 500 + EUR 150/week"),
     ("sr", "Sean Realistisch", "trend following: SPY/QQQ (2x SSO/QLD), GLD, bonds TLT + IEF; $500 + $300/month"),
-    ("mm", "Market Making (stopped)", "bid + ask quotes on BTC/ETH around the mid price, $500 budget, profits from the spread"),
     ("manual25", "Manual trades", "5 x EUR 25 crypto: sell at +30%, stop-loss at -40%"),
 ]
 

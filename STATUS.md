@@ -1,15 +1,15 @@
-# Bot status: 14-11-2026 14:38 (Dutch time)
+# Bot status: 14-11-2026 15:29 (Dutch time)
 
-Alpaca paper account: equity **$99,998.92**, cash $99,832.05. All bots share this account; below it is split per bot.
+Alpaca paper account: equity **$99,996.93**, cash $99,832.05. All bots share this account; below it is split per bot.
 
 | Bot | Bought | Sold | Holding now | Profit / loss | Buys | Open orders | Last fill |
 |---|---|---|---|---|---|---|---|
-| $ Bot 5 - Smart Reserve | $27.10 | $0.00 | $26.80 | 🔴 $-0.30 (-1.1%) | 1 | 0 | 14-11 12:11 |
+| $ Bot 5 - Smart Reserve | $27.10 | $0.00 | $26.63 | 🔴 $-0.47 (-1.7%) | 1 | 0 | 14-11 12:11 |
 | Sean Lavarge | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Sean Realistisch | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | MACD Nasdaq | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Botsi | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
-| Manual trades | $140.85 | $0.00 | $140.07 | 🔴 $-0.78 (-0.6%) | 5 | 5 | 14-11 10:05 |
+| Manual trades | $140.85 | $0.00 | $138.25 | 🔴 $-2.60 (-1.8%) | 5 | 5 | 14-11 10:05 |
 
 Profit / loss = sold + current value of holdings − bought (after Alpaca's 0.25% crypto fee). Money a bot hasn't spent yet isn't counted.
 
@@ -18,7 +18,7 @@ _EUR 500 + EUR 100/week pot, EUR 25 per dip_ · order label `rsv-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| BTC/USD | 0.000401965 | $66,673.04 | $26.80 |
+| BTC/USD | 0.000401965 | $66,250.70 | $26.63 |
 
 Last fills:
 
@@ -49,11 +49,11 @@ _5 x EUR 25 crypto: sell at +30%, stop-loss at -40%_ · order label `manual25-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| ETH/USD | 0.0148009 | $1,888.95 | $27.96 |
-| SOL/USD | 0.372449 | $75.29 | $28.04 |
+| ETH/USD | 0.0148009 | $1,849.37 | $27.37 |
+| SOL/USD | 0.372449 | $74.38 | $27.70 |
 | DOGE/USD | 447.633 | $0.062845 | $28.13 |
-| XRP/USD | 28.4314 | $0.985800 | $28.03 |
-| AVAX/USD | 3.48572 | $8.01 | $27.91 |
+| XRP/USD | 28.4314 | $0.984500 | $27.99 |
+| AVAX/USD | 3.48572 | $7.76 | $27.05 |
 
 Last fills:
 

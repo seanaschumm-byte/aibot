@@ -1,8 +1,7 @@
-name: "Bot 2 - BTC risk"
+name: "Bot 2 - BTC risk (STOPPED)"
 
 on:
-  schedule:
-    - cron: "7 * * * *"      # every hour, 24/7 (crypto never closes)
+  # schedule removed on 2026-11-14: bot stopped. Re-add a cron line to restart it.
   workflow_dispatch:
     inputs:
       mode:

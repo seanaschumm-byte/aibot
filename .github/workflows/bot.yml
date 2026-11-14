@@ -1,10 +1,7 @@
-name: "Bot 1 - Stocks VWAP dip"
+name: "Bot 1 - Stocks VWAP dip (STOPPED)"
 
 on:
-  schedule:
-    # Every 10 min, 14:00-20:50 UTC, Mon-Fri = 9:00-15:50 New York time (EST, Nov-Mar).
-    # From March (EDT) change to "*/10 13-19 * * 1-5". GitHub may delay scheduled runs at busy times.
-    - cron: "*/10 14-20 * * 1-5"
+  # schedule removed on 2026-11-14: bot stopped. Re-add a cron line to restart it.
   workflow_dispatch:
     inputs:
       mode:

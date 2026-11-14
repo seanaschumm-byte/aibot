@@ -1,0 +1,25 @@
+name: "MACD Nasdaq - backtest"
+
+on:
+  push:
+    paths: ["macd_nasdaq/**.py", ".github/workflows/macd_nasdaq_test.yml"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy pytest
+      - run: python -m pytest -q test_macd_nasdaq.py
+      - name: Backtest last 8 months
+        run: python -m macd_nasdaq.backtest 8
+      - name: Backtest last 24 months
+        run: python -m macd_nasdaq.backtest 24

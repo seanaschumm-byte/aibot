@@ -10,6 +10,8 @@ The top 3 of the 6-month replay (16 May – 14 Nov 2026, `compare_6m.py`). All o
 | **$ Bot 5 - Smart Reserve** (`reserve_bot.py`) | Buys €25 dips on 7 coins from one euro pot (€500 + €100/week), lowest RSI first, with a cap per coin and a trailing take-profit. | +0.9%, max drawdown −10.7% (BTC: −7.7%) | `rsv-` |
 | **Sean Realistisch** ([`sean_realistisch/`](sean_realistisch/README.md)) | Trend following on SPY/QQQ (2× SSO/QLD in a bull market), gold (GLD) and bonds (TLT, IEF). $500 + $300/month, no margin. | −1.4%, max drawdown −6.9% (SPY: +0.5%) | `sr-` |
 
+| **MACD Nasdaq** ([`macd_nasdaq/`](macd_nasdaq/strategy.py)) | Winner of the 8-month test of 14 known strategies. QQQ in when MACD(12,26,9) is above its signal line, and also buys 12% dips (vs the 3-month high). Each buy: 50% sold at +12%, the rest at +25%, or at +18% if it falls back after passing it. MACD sell signal sells all. Money from sales goes into the next buy. €500 + €100/week. | added 14 Nov 2026 | `mn-` |
+
 Also in the account: **5 manual crypto trades** (`manual25-`) with a +30% take-profit and a −40% stop-loss guard (`manual_guard.py`, every 15 min).
 
 Removed on 14 Nov 2026: Bots 1–4 (stocks VWAP dip, BTC risk, crypto daily dip, weekly dip) and Market Making. They are still in the git history.

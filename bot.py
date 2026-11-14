@@ -40,7 +40,7 @@ MAX_TRADES_PER_DAY = 3
 BREAKEVEN_AT_R = 1.0           # Minervini: don't let a good gain become a loss
 NO_ENTRY_BEFORE = dt.time(9, 45)   # let the opening chaos settle
 NO_ENTRY_AFTER = dt.time(15, 0)
-FLATTEN_AT = dt.time(15, 50)       # intraday only: flat before the close
+FLATTEN_AT = dt.time(15, 40)       # intraday only: flat before the close (2 tries: 15:40, 15:50)
 PREFIX = "aibot"
 
 ET = ZoneInfo("America/New_York")

@@ -1,10 +1,10 @@
 # AI bot: VWAP pullback paper trader
 
-An intraday "buy the dip in an uptrend" bot for an **Alpaca paper account**. GitHub Actions runs it every 5 minutes during US market hours.
+An intraday "buy the dip in an uptrend" bot for an **Alpaca paper account**. GitHub Actions runs it every 10 minutes during US market hours.
 
 - **Budget:** a virtual €75 deposited every Monday from 16 Nov 2026. The bot only spends that money, never the full $100k paper balance.
 - **Test period:** 16 Nov to 16 Dec 2026. After that it stops opening trades.
-- **Intraday only:** every position is closed by 15:50 New York time.
+- **Intraday only:** every position is closed from 15:40 New York time.
 - **Your trades on Alpaca:** every bot order appears in your paper dashboard with a `client_order_id` starting with `aibot-`.
 
 ## The strategy
@@ -45,7 +45,7 @@ These are summaries of their public teaching (books, courses, interviews), appli
 3. Go to **Actions → trading-bot → Enable**. The bot runs on the 5-minute schedule from then on.
 4. To check results, go to **Actions → trading-bot → Run workflow** with mode `report`. The summary appears on the run page. Every scheduled run also writes its log and a summary there.
 
-Running every 5 minutes on weekdays uses about 1,850 GitHub Actions minutes a month. A private repo on the free plan includes 2,000.
+The stock bot (every 10 minutes on weekdays, about 920 minutes a month) and the BTC bot (hourly, about 720) together use about 1,650 GitHub Actions minutes a month. A private repo on the free plan includes 2,000.
 
 ## Local use
 
@@ -59,7 +59,7 @@ python bot.py report                      # performance since the start date
 ## Limitations
 
 - **IEX data only.** The free Alpaca data feed is IEX, a small share of total volume, so VWAP and volume figures are approximate.
-- **Coarse timing.** The bot only checks prices every 5 minutes (sometimes later when GitHub is busy). The stop sits with the broker, so the downside is covered between checks, but targets and the breakeven move only happen on a check.
+- **Coarse timing.** The bot only checks prices every 10 minutes (sometimes later when GitHub is busy). The stop sits with the broker, so the downside is covered between checks, but targets and the breakeven move only happen on a check.
 - **Paper results aren't real results.** Paper fills are optimistic: no slippage and no queue position.
 - **Real money is different.** With real money at a US broker, an account under $25k may hit the pattern-day-trader limit of 3 day trades per 5 business days. At about €75 a week, fees and spreads would also take a large share of any gains.
 

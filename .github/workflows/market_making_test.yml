@@ -1,0 +1,23 @@
+name: "Market Making - simulation"
+
+on:
+  push:
+    paths: ["market_making/**.py", ".github/workflows/market_making_test.yml"]
+  workflow_dispatch:
+
+jobs:
+  sim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pytest
+      - run: python -m pytest -q test_market_making.py
+      - name: Simulate 30 days of 1-minute data
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python -m market_making.backtest

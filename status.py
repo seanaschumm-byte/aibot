@@ -26,6 +26,7 @@ BOTS = [  # prefix, name, what it does
     ("rsv", "$ Bot 5 - Smart Reserve", "EUR 500 + EUR 100/week pot, EUR 25 per dip"),
     ("sl", "Sean Lavarge", "2x crypto ETFs (BITU/ETHT/SOLZ, SBIT/ETHD), EUR 500 + EUR 150/week"),
     ("sr", "Sean Realistisch", "SPY/QQQ (2x SSO/QLD) + GLD, $500 + $300/month"),
+    ("mm", "Market Making", "bid + ask quotes on BTC/ETH around the mid price, $500 budget, profits from the spread"),
     ("manual25", "Manual trades", "5 x EUR 25 crypto: sell at +30%, stop-loss at -40%"),
 ]
 

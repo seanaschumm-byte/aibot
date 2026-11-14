@@ -14,8 +14,8 @@ import sys
 import time
 
 from bot import api, eurusd, DATA_URL, DRY_RUN
-from weekly_dip_strategy import (LEVELS, TAKE_PROFIT, crashed, fmt_price, plan_orders,
-                                 weekly_vwap)
+from weekly_dip_strategy import (TAKE_PROFIT, crashed, fmt_price, level_price, plan_orders,
+                                 weekly_sigma, weekly_vwap, LEVELS)
 
 COINS = ["ETH/USD", "SOL/USD", "XRP/USD", "DOGE/USD", "AVAX/USD", "LINK/USD"]  # not BTC: btc bot
 START = dt.date(2026, 11, 14)
@@ -127,20 +127,22 @@ def new_week(orders: list[dict], today: dt.date, fx: float) -> None:
 
     # 2. this week's average market price per coin
     bars = hourly_bars()
-    avgs = {}
+    avgs, sigmas = {}, {}
     for c in COINS:
         b = bars.get(c, [])
         if len(b) < 168:
             log(f"  {c:9} not enough data")
             continue
-        avg, last = weekly_vwap(b), b[-1]["c"]
-        avgs[c] = avg
+        avg, last, sig = weekly_vwap(b), b[-1]["c"], weekly_sigma(b)
+        avgs[c], sigmas[c] = avg, sig
         flag = " CRASH (>35% down in 30 days): buying anyway" if crashed(b) else ""
-        log(f"  {c:9}{flag} weekly avg {fmt_price(avg)}, now {fmt_price(last)} ({last / avg - 1:+.1%}); "
-            f"buys at " + ", ".join(fmt_price(avg * (1 + d)) for d, _ in LEVELS))
+        log(f"  {c:9}{flag} weekly avg {fmt_price(avg)}, now {fmt_price(last)} ({last / avg - 1:+.1%}), "
+            f"volatility {sig / avg:.1%}; buys at "
+            + ", ".join(f"{fmt_price(level_price(avg, sig, i))} ({level_price(avg, sig, i) / avg - 1:.0%})"
+                        for i in range(len(LEVELS))))
 
     # 3. place the grid
-    for p in plan_orders(avgs, led["cash"] * 0.995):
+    for p in plan_orders(avgs, led["cash"] * 0.995, sigma_by_coin=sigmas):
         tag = p["coin"].split("/")[0]
         cid = f"{PREFIX}-B-{tag}-{wk}-L{p['level']}-{int(time.time())}"
         log(f"BUY LIMIT {p['coin']} {p['qty']:.6f} @ {fmt_price(p['limit'])} (${p['usd']:.2f}, "

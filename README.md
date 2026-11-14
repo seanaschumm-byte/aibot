@@ -147,6 +147,8 @@ The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7
 | **DCA** (dollar-cost averaging) | A fixed amount every period | ✅ €175 every week; unused money carries over |
 | **"Buy when there's blood in the streets"** (attributed to Baron Rothschild) / Buffett's "be greedy when others are fearful" | Buy when others panic | ✅ Buys on sharp drops and in crashes, with an extra −30% level |
 | **Larry Connors' mean reversion** | Buy dips only in healthy markets, not in a collapse | ❌ Deliberately not used: at your request the bot also buys during crashes |
+| **John Bollinger** (Bollinger Bands) — *best fit, adopted* | Measure "cheap" in standard deviations, not a fixed % | ✅ Levels 2–4 move down to 2σ / 3σ / 4σ under the weekly average when a coin is wild, so crashes are bought cheaper and the money isn't spent too early. Level 1 always stays at your −10%. |
+| **Larry Connors' exit** — *best fit, already in your rules* | Exit mean-reversion trades back at the average ("exit at the mean") | ✅ Buying at −10% and selling at +12% means selling at about the weekly average |
 | **Stop-losses** (most trend traders) | Always cap the loss | ❌ Not used. Mean reversion with a stop often sells right at the bottom. The risk is that a coin keeps falling and the money stays stuck. |
 
 **Typical behaviour:** many small wins (+12%) and occasionally a position that stays "underwater" for a long time. It works best when the market moves sideways, and worst in a long downtrend.

@@ -1,7 +1,7 @@
 """Offline tests for the weekly dip bot."""
 import datetime as dt
 import weekly_dip_bot as w
-from weekly_dip_strategy import plan_orders, weekly_vwap, crashed, fmt_price
+from weekly_dip_strategy import plan_orders, weekly_vwap, crashed, fmt_price, level_price
 
 
 def test_weekly_vwap_weights_volume():
@@ -45,3 +45,14 @@ def test_ledger_cash_and_lots():
 
 def test_price_format():
     assert fmt_price(1899.8) == "1899.8" and fmt_price(75.4) == "75.40" and fmt_price(0.06281) == "0.062810"
+
+
+def test_bollinger_levels_only_go_deeper_in_wild_weeks():
+    calm = [level_price(100, 1.0, i) for i in range(4)]       # sigma 1%: fixed % levels
+    assert [round(x) for x in calm] == [90, 85, 80, 70]
+    wild = [level_price(100, 8.0, i) for i in range(4)]       # sigma 8%: 2/3/4 sigma bands
+    assert round(wild[0]) == 90                                # user's -10% always kept
+    assert [round(x) for x in wild[1:]] == [84, 76, 68]        # 100-16, 100-24, 100-32
+    assert all(w <= c for w, c in zip(wild, calm))             # never higher than the fixed levels
+    plan = plan_orders({"X": 100.0}, 100.0, sigma_by_coin={"X": 8.0})
+    assert abs(sum(p["usd"] for p in plan) - 100) < 1e-9

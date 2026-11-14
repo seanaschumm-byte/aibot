@@ -29,5 +29,5 @@ jobs:
       - name: Run bot
         run: python bot.py ${{ github.event.inputs.mode || 'run' }}
         env:
-          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
-          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          ALPACA_API_KEY: ${{ PKVKKXO5DPEZ3YKXQ6ITLMDCIP }}
+          ALPACA_SECRET_KEY: ${{ 3kiS8TTUEXDQdoqfwqJYE1CDLG2DEPFY2ZnPXC1QnyFr }}

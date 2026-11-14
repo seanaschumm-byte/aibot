@@ -11,11 +11,11 @@ def test_weekly_vwap_weights_volume():
 
 def test_plan_levels_and_budget():
     plan = plan_orders({"ETH/USD": 2000.0, "SOL/USD": 100.0}, 200.0)
-    assert len(plan) == 6
+    assert len(plan) == 8
     assert abs(sum(p["usd"] for p in plan) - 200.0) < 1e-6          # never more than the budget
     eth = [p for p in plan if p["coin"] == "ETH/USD"]
-    assert [round(p["limit"]) for p in eth] == [1800, 1700, 1600]    # -10/-15/-20%
-    assert eth[2]["usd"] > eth[0]["usd"]                              # more money deeper
+    assert [round(p["limit"]) for p in eth] == [1800, 1700, 1600, 1400]    # -10/-15/-20/-30%
+    assert eth[3]["usd"] > eth[0]["usd"]                              # more money deeper (crash level)
 
 
 def test_crash_filter():

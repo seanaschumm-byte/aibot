@@ -130,10 +130,10 @@ The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7
 
 - **Budget:** €175 per week, from ISO week 46 (14 Nov 2026) through week 50 (13 Dec), so 5 deposits = €875. Money that isn't used rolls over to the next week, and profits are reinvested.
 - **Weekly reference price:** every Monday the bot computes each coin's average price (VWAP) over the last 7 days and logs it.
-- **Buys:** resting limit orders at **−10%, −15% and −20%** of that average, with 25% / 35% / 40% of the coin's budget. They wait 24/7, so a sudden crash is caught even between checks.
+- **Buys:** resting limit orders at **−10%, −15%, −20% and −30%** (crash level) of that average, with 20% / 25% / 25% / 30% of the coin's budget. They wait 24/7, so a sudden crash is caught even between checks.
 - **Sells:** each filled buy immediately gets its own limit sell at **+12%**. There's no stop-loss.
 - **Weekly reset:** unfilled buys are cancelled each Monday and placed again around the new weekly average.
-- **Coins:** ETH, SOL, XRP, DOGE, AVAX and LINK. A coin is skipped that week if it fell more than 35% in 30 days.
+- **Coins:** ETH, SOL, XRP, DOGE, AVAX and LINK. It **also buys during crashes**: there's no crash filter, and a coin that fell more than 35% in 30 days is only marked as CRASH in the log.
 - **Schedule:** checks every hour at :22. Its orders carry a `client_order_id` starting with `dip10-`.
 
 ## Compared with known strategies
@@ -142,11 +142,11 @@ The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7
 |---|---|---|
 | Your rule | Buy −10% under the average, sell +12% | ✅ The core of the bot |
 | **Bollinger / mean reversion** | Prices swing around an average and snap back after extremes | ✅ Weekly VWAP as the "middle band"; −10% as the buy zone |
-| **Grid trading** (popular on crypto exchanges) | A ladder of limit buys below the price, each with a fixed take-profit | ✅ 3 levels, each lot with its own +12% sell |
-| **Value averaging** (Michael Edleson) | Put in more money when prices are lower | ✅ Deeper levels get more money (25/35/40%) |
+| **Grid trading** (popular on crypto exchanges) | A ladder of limit buys below the price, each with a fixed take-profit | ✅ 4 levels, each lot with its own +12% sell |
+| **Value averaging** (Michael Edleson) | Put in more money when prices are lower | ✅ Deeper levels get more money (20/25/25/30%) |
 | **DCA** (dollar-cost averaging) | A fixed amount every period | ✅ €175 every week; unused money carries over |
-| **"Buy when there's blood in the streets"** (attributed to Baron Rothschild) | Buy when others panic | ✅ Buys only on sharp drops |
-| **Larry Connors' mean reversion** | Buy dips only in healthy markets, not in a collapse | ✅ (adapted) Crash filter: skip coins down >35% in 30 days |
+| **"Buy when there's blood in the streets"** (attributed to Baron Rothschild) / Buffett's "be greedy when others are fearful" | Buy when others panic | ✅ Buys on sharp drops and in crashes, with an extra −30% level |
+| **Larry Connors' mean reversion** | Buy dips only in healthy markets, not in a collapse | ❌ Deliberately not used: at your request the bot also buys during crashes |
 | **Stop-losses** (most trend traders) | Always cap the loss | ❌ Not used. Mean reversion with a stop often sells right at the bottom. The risk is that a coin keeps falling and the money stays stuck. |
 
 **Typical behaviour:** many small wins (+12%) and occasionally a position that stays "underwater" for a long time. It works best when the market moves sideways, and worst in a long downtrend.

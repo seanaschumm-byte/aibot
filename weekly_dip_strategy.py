@@ -4,15 +4,16 @@ Ideas taken from known strategies (see README, "Weekly dip bot"):
 - Bollinger / mean reversion: the weekly average price (7-day VWAP) is the 'fair' middle;
   -10% under it is the user's buy zone.
 - Grid trading: several resting limit buys below the average, each with its own fixed take-profit.
-- Value averaging: put MORE money in at deeper levels (25% / 35% / 40%).
+- Value averaging: put MORE money in at deeper levels (20% / 25% / 25% / 30%).
 - DCA: fixed weekly budget, unused money carries over.
-- Connors-style crash filter: skip coins that collapsed >35% in 30 days (structural crash, not a dip).
+- Contrarian 'buy the crash' (Rothschild / Buffett "be greedy when others are fearful"):
+  no crash filter, plus an extra deep level at -30% to buy into real crashes.
 """
 from __future__ import annotations
 
-LEVELS = [(-0.10, 0.25), (-0.15, 0.35), (-0.20, 0.40)]   # (distance from weekly avg, budget share)
+LEVELS = [(-0.10, 0.20), (-0.15, 0.25), (-0.20, 0.25), (-0.30, 0.30)]   # (distance from weekly avg, budget share)
 TAKE_PROFIT = 0.12
-CRASH_30D = -0.35
+CRASH_30D = -0.35   # only used to LABEL a crash in the log; crashed coins are still bought
 
 
 def weekly_vwap(bars: list[dict], hours: int = 168) -> float:
@@ -31,7 +32,7 @@ def crashed(bars: list[dict], hours: int = 720) -> bool:
 
 def plan_orders(avg_by_coin: dict[str, float], cash: float,
                 min_order: float = 1.0) -> list[dict]:
-    """Split the available cash equally over coins, and per coin over the 3 levels."""
+    """Split the available cash equally over coins, and per coin over the levels."""
     if not avg_by_coin or cash <= 0:
         return []
     per_coin = cash / len(avg_by_coin)

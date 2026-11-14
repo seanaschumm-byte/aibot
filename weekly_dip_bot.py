@@ -1,4 +1,4 @@
-"""Weekly crypto dip bot: EUR 175 per week, limit buys at -10/-15/-20% of last week's
+"""Weekly crypto dip bot: EUR 175 per week, limit buys at -10/-15/-20/-30% of last week's
 average price (7-day VWAP), each fill sold at +12%.
 
 Every Monday (ISO week) it cancels last week's unfilled buys, records the new weekly
@@ -134,11 +134,9 @@ def new_week(orders: list[dict], today: dt.date, fx: float) -> None:
             log(f"  {c:9} not enough data")
             continue
         avg, last = weekly_vwap(b), b[-1]["c"]
-        if crashed(b):
-            log(f"  {c:9} SKIP: crashed >35% in 30 days (falling knife)")
-            continue
         avgs[c] = avg
-        log(f"  {c:9} weekly avg {fmt_price(avg)}, now {fmt_price(last)} ({last / avg - 1:+.1%}); "
+        flag = " CRASH (>35% down in 30 days): buying anyway" if crashed(b) else ""
+        log(f"  {c:9}{flag} weekly avg {fmt_price(avg)}, now {fmt_price(last)} ({last / avg - 1:+.1%}); "
             f"buys at " + ", ".join(fmt_price(avg * (1 + d)) for d, _ in LEVELS))
 
     # 3. place the grid
@@ -163,7 +161,7 @@ def report(led: dict, fx: float) -> str:
     profit = sum(float(l["sell"]["filled_qty"]) * float(l["sell"]["filled_avg_price"])
                  - l["qty"] * l["price"] for l in sold)
     invested_open = sum(l["qty"] * l["price"] for l in lots if l not in sold)
-    lines = ["## Weekly dip bot (EUR 175/week, buy -10/-15/-20% of weekly avg, sell +12%)",
+    lines = ["## Weekly dip bot (EUR 175/week, buy -10/-15/-20/-30% of weekly avg, sell +12%)",
              f"- Deposits: {led['weeks']} x EUR {EUR_PER_WEEK:.0f} = ${led['deposits']:.2f} (EURUSD {fx:.4f})",
              f"- Free cash (incl. money reserved in open buy orders): ${led['cash']:.2f}",
              f"- Lots bought: {len(lots)}; sold at +12%: {len(sold)} (profit ${profit:+.2f}); "

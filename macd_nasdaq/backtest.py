@@ -157,6 +157,7 @@ ALL_MARKETS = {"QQQ": ("QQQ", 63, 0.0), "BTC": ("BTC/USD", 90, 0.0025), "ETH": (
 # MACD Nasdaq = QQQ; Botsi = BTC,ETH,SOL (set MARKETS=BTC,ETH,SOL)
 MARKETS = {t: ALL_MARKETS[t] for t in os.getenv("MARKETS", "QQQ").split(",")}
 TITLE = os.getenv("TITLE", "MACD Nasdaq")
+SAT_LABEL = "plain MACD" if os.getenv("SAT_MODE") == "macd" else "MACD + dips + profit rules"
 
 
 def combine(curves: list[list[tuple]]) -> dict:
@@ -201,14 +202,15 @@ def main() -> None:
     # core + satellite: 60% core, 40% the new MACD rules. Core variants:
     #   current: sell 100% at +60%, buy back at -30%   C: sell 25% at +60%, rest keeps running   A: never sell
     events = []
-    for label, sell_frac, tp in (("Core 60% + satellite 40% (core sells 100% at +60%, now live)", 1.0, 0.60),
-                                 ("**C: core sells 25% at +60%**", 0.25, 0.60),
-                                 ("A: core never sells", 1.0, 99.0)):
+    for label, sell_frac, tp in (("Core 60% (sells 100% at +60%) + satellite 40%", 1.0, 0.60),
+                                 ("Core 60% (sells 25% at +60%) + satellite 40%", 0.25, 0.60),
+                                 (f"**Core 60% never sells + satellite 40% {SAT_LABEL} (live)**", 1.0, 99.0)):
         core_runs, sat_runs = {}, {}
         for tag, (_, lb, fee) in MARKETS.items():
             core_runs[tag] = simulate(data[tag], start, "core", Rules(dip_lookback=lb), 300.0 * share, 60.0 * share,
                                       fee, sell_frac, tp)
-            sat_runs[tag] = simulate(data[tag], start, "new", Rules(dip_lookback=lb), 200.0 * share, 40.0 * share, fee)
+            sat_runs[tag] = simulate(data[tag], start, os.getenv("SAT_MODE", "new"), Rules(dip_lookback=lb),
+                                     200.0 * share, 40.0 * share, fee)   # Botsi: SAT_MODE=macd (plain MACD)
         tot = combine([r["curve"] for r in list(core_runs.values()) + list(sat_runs.values())])
         dep = sum(r["deposited"] for r in list(core_runs.values()) + list(sat_runs.values()))
         lines.append(f"| {label} | EUR {dep:,.0f} | EUR {tot['final']:,.0f} | EUR {tot['final'] - dep:+,.0f} | "

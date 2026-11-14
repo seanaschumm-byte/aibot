@@ -1,0 +1,23 @@
+name: "Compare bots - last 6 months"
+
+on:
+  push:
+    paths: ["compare_6m.py", ".github/workflows/compare_6m.yml"]
+  workflow_dispatch:
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install requests pandas numpy ccxt alpaca-py
+      - name: Replay the active bots on the last 6 months
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python compare_6m.py

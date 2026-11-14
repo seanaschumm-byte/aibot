@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| Exchange | Kraken Futures via `ccxt` (demo environment while `TESTNET`); configurable with `EXCHANGE_ID` |
-| Markets | BTC, ETH and SOL perpetual futures, long and short |
+| Exchange | Binance USD-M Futures via `ccxt`: the **testnet** while `TESTNET`. Configurable with `EXCHANGE_ID`. Kraken's demo and Bybit's testnet were not reachable from GitHub. |
+| Markets | BTC, ETH and SOL perpetual futures (USDT-margined), long and short |
 | Capital | €500 start + €150 every Monday 00:00 UTC. New deposits are locked for 7 days (deposit shield). |
-| Leverage | Max 10×, isolated margin. On Kraken, a per-contract leverage setting means isolated margin. |
+| Leverage | Max 10×, isolated margin, set per symbol before each entry |
 | Schedule | Every 15 minutes (GitHub Actions), or `python -m sean_lavarge.main --loop` on your own PC |
 
 ## Rules
@@ -33,7 +33,7 @@
 
 ## Setup (demo)
 
-1. Create a free demo account at https://demo-futures.kraken.com and make an API key there (*Settings → API*), with **full access, no withdrawal**.
+1. Go to https://testnet.binancefuture.com, log in, and copy the **API Key** and **Secret Key** shown under the order panel (*API Key* tab). This is fake money and separate from a real Binance account.
 2. In GitHub, go to **Settings → Secrets → Actions** and add `SEAN_EXCHANGE_API_KEY` and `SEAN_EXCHANGE_SECRET`.
 3. Optional alerts: add `DISCORD_WEBHOOK_URL`, or `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`.
 4. The **Sean Lavarge** workflow runs every 15 minutes. **Run workflow** with `check`, `run` or `backtest` runs it by hand.
@@ -43,5 +43,5 @@ The demo account has a large fake balance. In demo mode the bot therefore keeps 
 ## Before real money
 
 - Run 30+ days on demo and compare the results with the backtest.
-- **EU rules:** retail leverage on crypto derivatives is limited, and many exchanges don't offer perpetual futures to EU residents. Check what your exchange allows you.
+- **EU rules:** Binance doesn't serve the Netherlands, and many exchanges don't offer perpetual futures to EU residents. For real money you'd need a licensed EU venue that offers leveraged crypto products, often with a lower maximum leverage. Set `EXCHANGE_ID` to it.
 - For live trading, set `TESTNET: "false"` (then `CAPITAL_MODE` becomes `balance`, so equity comes from `fetch_balance()` and deposits are detected automatically), and use live keys **without withdrawal rights**.

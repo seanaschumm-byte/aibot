@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 20
     env:
       TESTNET: "true"            # demo exchange, fake money. Set to "false" only after 30 days of testing.
-      EXCHANGE_ID: krakenfutures
+      EXCHANGE_ID: binanceusdm
       EXCHANGE_API_KEY: ${{ secrets.SEAN_EXCHANGE_API_KEY }}
       EXCHANGE_SECRET: ${{ secrets.SEAN_EXCHANGE_SECRET }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

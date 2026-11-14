@@ -12,10 +12,10 @@ import os
 
 # ---------------------------------------------------------------- mode
 TESTNET = os.getenv("TESTNET", "true").lower() != "false"   # True = demo exchange, fake money
-EXCHANGE_ID = os.getenv("EXCHANGE_ID", "krakenfutures")      # any ccxt id with perps, e.g. bybit
+EXCHANGE_ID = os.getenv("EXCHANGE_ID", "binanceusdm")        # Binance USD-M futures (testnet while TESTNET)
 # Perpetual futures to trade (ccxt unified symbols for the exchange above).
-SYMBOLS = os.getenv("SYMBOLS", "BTC/USD:USD,ETH/USD:USD,SOL/USD:USD").split(",")
-QUOTE = os.getenv("QUOTE", "USD")                            # currency of PnL / margin
+SYMBOLS = os.getenv("SYMBOLS", "BTC/USDT:USDT,ETH/USDT:USDT,SOL/USDT:USDT").split(",")
+QUOTE = os.getenv("QUOTE", "USDT")                           # currency of PnL / margin
 
 # ---------------------------------------------------------------- capital (in EUR)
 START_DATE = dt.date(2026, 11, 14)
@@ -53,7 +53,7 @@ MAX_CONSECUTIVE_LOSSES = 3          # 3 losses in a row within 24h -> pause
 PAUSE_HOURS = 24
 
 # ---------------------------------------------------------------- costs (backtest)
-TAKER_FEE = 0.0005                  # 0.05% per side (Kraken Futures taker, low tier)
+TAKER_FEE = 0.0005                  # 0.05% per side (Binance USD-M taker, low tier)
 SLIPPAGE = 0.0005                   # 0.05% per fill
 FUNDING_PER_8H = 0.0001             # 0.01% of notional per 8h held (typical perp funding)
 

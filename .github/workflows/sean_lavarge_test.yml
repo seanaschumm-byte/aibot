@@ -18,7 +18,7 @@ jobs:
       - run: pip install -r sean_lavarge/requirements.txt
       - name: Unit tests
         run: python -m pytest -q test_sean_lavarge.py
-      - name: Kraken Futures demo connectivity
+      - name: Binance Futures testnet connectivity
         run: python -m sean_lavarge.check
         continue-on-error: true
       - name: Backtest 12 months (EUR 500 + EUR 150/week)

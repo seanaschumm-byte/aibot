@@ -11,7 +11,7 @@
 | $ 5 | Smart Reserve | €500 + €100/week pot, €25 per dip | `rsv-` |
 | 6 | **Sean Lavarge** (`sean_lavarge/`) | BTC/ETH/SOL futures, up to 10× isolated, long + short. Binance testnet, not Alpaca. | Binance testnet |
 | 7 | **Sean Realistisch** (`sean_realistisch/`) | Trend following on 5 markets: SPY/QQQ (2× SSO/QLD in a bull market), gold GLD, bonds TLT + IEF. $500 + $300/month, no margin. | `sr-` |
-| 8 | **Market Making** (`market_making/`) | Keeps a bid and an ask on BTC/ETH around the mid price, re-quoted every 5 min; profit = spread minus 2× 0.15% maker fee. $500 budget, max $250 inventory per coin, kill switch at −$50. | `mm-` |
+| 8 | ~~**Market Making**~~ (stopped) (`market_making/`) | Keeps a bid and an ask on BTC/ETH around the mid price, re-quoted every 5 min; profit = spread minus 2× 0.15% maker fee. $500 budget, max $250 inventory per coin, kill switch at −$50. | `mm-` |
 
 # Bot 1 - Stocks VWAP dip (`bot.py`)
 

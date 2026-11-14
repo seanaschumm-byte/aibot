@@ -29,10 +29,11 @@ NAME, PREFIX = "MACD Nasdaq", "mn"
 START = dt.date(2026, 11, 16)                 # first Monday
 START_EUR, WEEKLY_EUR = 500.0, 100.0
 MARKETS = {  # tag: (symbol, kind, share of the money, dip look-back in daily bars ~3 months)
-    "CORE": ("QQQ", "stock", 0.6, 63),   # core: buy every week, sell all at +60%, buy back at -30%
+    "CORE": ("QQQ", "stock", 0.6, 63),   # core: buy every week and never sell (variant A)
     "QQQ": ("QQQ", "stock", 0.4, 63),    # satellite: MACD + 12% dips + 12/18/25% profit rules
 }
-CORE_TAKE_PROFIT, CORE_BUY_BACK = 0.60, 0.30
+CORE_TAKE_PROFIT, CORE_BUY_BACK = None, 0.30   # None = the core never sells (variant A, chosen 14 Nov 2026;
+# 5-year backtest: never selling +EUR 12,567 vs sell 100% at +60% +EUR 12,477 vs sell 25% +EUR 11,940)
 PLAIN_MACD = False   # True (Botsi): only MACD in/out, no dip buys and no 12/18/25% profit rules
 CRYPTO_FEE = 0.0025
 MIN_ORDER = 10.0                              # Alpaca minimum for crypto orders
@@ -161,17 +162,17 @@ def sell(tag: str, lot: dict, qty: float, why: str) -> None:
 
 
 def run_core(s: dict, tag: str, cash: float, today: dt.date) -> None:
-    """Core: buy every week and hold; sell everything at +60% on the average cost; after that,
-    buy back with all core cash once the price is 30% under the highest price since the sale."""
+    """Core: buy every week and hold. With CORE_TAKE_PROFIT set (not the default) it would sell
+    everything at that gain and buy back once the price is 30% under the highest price since the sale."""
     st = s[tag]
     st.setdefault("sold", None)
     px = price(tag)
     held = [l for l in st["lots"] if l["qty"] > 0]
     if st["sold"] is None:
         avg = sum(l["qty"] * l["entry"] for l in held) / sum(l["qty"] for l in held) if held else 0.0
-        log.info("CORE QQQ %.2f | avg cost %.2f (%+.1f%%, sells at +60%%) | cash $%.2f", px, avg,
+        log.info("CORE QQQ %.2f | avg cost %.2f (%+.1f%%, never sells) | cash $%.2f", px, avg,
                  (px / avg - 1) * 100 if avg else 0, cash)
-        if held and px >= avg * (1 + CORE_TAKE_PROFIT):
+        if held and CORE_TAKE_PROFIT is not None and px >= avg * (1 + CORE_TAKE_PROFIT):
             for lot in held:
                 sell(tag, lot, lot["qty"], "core +60%: everything sold")
             st["sold"] = {"price": px, "peak": px, "date": today.isoformat()}

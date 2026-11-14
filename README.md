@@ -10,7 +10,7 @@ The top 3 of the 6-month replay (16 May – 14 Nov 2026, `compare_6m.py`). All o
 | **$ Bot 5 - Smart Reserve** (`reserve_bot.py`) | Buys €25 dips on 7 coins from one euro pot (€500 + €100/week), lowest RSI first, with a cap per coin and a trailing take-profit. | +0.9%, max drawdown −10.7% (BTC: −7.7%) | `rsv-` |
 | **Sean Realistisch** ([`sean_realistisch/`](sean_realistisch/README.md)) | Trend following on SPY/QQQ (2× SSO/QLD in a bull market), gold (GLD) and bonds (TLT, IEF). $500 + $300/month, no margin. | −1.4%, max drawdown −6.9% (SPY: +0.5%) | `sr-` |
 
-| **MACD Nasdaq** ([`macd_nasdaq/`](macd_nasdaq/strategy.py)) | QQQ, **core + satellite**. Core (60%): buys QQQ every week and holds; sells everything at +60% on the average cost, buys back when QQQ is 30% under its highest price since that sale. Satellite (40%): MACD(12,26,9) in/out + buys 12% dips; each buy sells 50% at +12%, the rest at +25% (or +18% if it falls back). €500 + €100/week. | added 14 Nov 2026 | `mn-` |
+| **MACD Nasdaq** ([`macd_nasdaq/`](macd_nasdaq/strategy.py)) | QQQ, **core + satellite**. Core (60%): buys QQQ every week and **never sells**, also not in a drop. Satellite (40%): MACD(12,26,9) in/out + buys 12% dips; each buy sells 50% at +12%, the rest at +25% (or +18% if it falls back). €500 + €100/week. | added 14 Nov 2026 | `mn-` |
 | **Botsi** ([`botsi/`](botsi/bot.py)) | Plain MACD crossover on **BTC, ETH and SOL**, 24/7, one third each: in when MACD is up, out when it turns down. €500 + €100/week. | added 14 Nov 2026 | `bs-` |
 
 Also in the account: **5 manual crypto trades** (`manual25-`) with a +30% take-profit and a −40% stop-loss guard (`manual_guard.py`, every 15 min).

@@ -59,8 +59,15 @@ def test_bot_day_cycle(tmp_path, monkeypatch):
     s = B.run_once(d1 + dt.timedelta(hours=1))                             # the core keeps everything
     sells = [o for o in orders if o[1] == "sell"]
     assert [o[0] for o in sells] == ["QQQ"] and s["QQQ"]["lots"][0]["half"] and not s["CORE"]["lots"][0].get("half")
-    px["v"] = 805.0                                                        # +61%: core sells everything
+    px["v"] = 805.0                                                        # +61%: variant A keeps everything
     s = B.run_once(d1 + dt.timedelta(hours=2))
+    assert s["CORE"]["sold"] is None and s["CORE"]["lots"]
+    px["v"] = 300.0                                                        # -40%: still never sells
+    s = B.run_once(d1 + dt.timedelta(hours=2, minutes=30))
+    assert s["CORE"]["lots"] and not [o for o in orders if o[0] == "CORE" and o[1] == "sell"]
+    monkeypatch.setattr(B, "CORE_TAKE_PROFIT", 0.60)                       # optional rule still works
+    px["v"] = 805.0
+    s = B.run_once(d1 + dt.timedelta(hours=2, minutes=45))
     assert s["CORE"]["sold"] and not s["CORE"]["lots"]
     px["v"] = 1000.0                                                       # higher top after the sale
     B.run_once(d1 + dt.timedelta(hours=3))

@@ -1,0 +1,26 @@
+name: "Manual trades - stop-loss -40%"
+
+on:
+  schedule:
+    - cron: "6,21,36,51 * * * *"   # every 15 minutes, 24/7 (crypto)
+  workflow_dispatch:
+
+concurrency:
+  group: manual-guard
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Check -40% stop-loss
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python manual_guard.py | tee -a "$GITHUB_STEP_SUMMARY"

@@ -22,7 +22,8 @@ from . import config as C
 from . import indicators as I
 from . import risk_manager as R
 
-SYMBOLS = ["SPY", "QQQ", "SSO", "QLD", "GLD"]
+SYMBOLS = ["SPY", "QQQ", "SSO", "QLD", "GLD", "TLT", "IBIT"]
+ONLY_SLEEVES = os.getenv("SLEEVES")   # e.g. "SPY,QQQ,GLD" to compare with the old 3-market version
 
 
 def download(months: int) -> dict[str, pd.DataFrame]:
@@ -32,6 +33,8 @@ def download(months: int) -> dict[str, pd.DataFrame]:
 
 
 def simulate(data: dict[str, pd.DataFrame], months: int = C.BACKTEST_MONTHS) -> dict:
+    sleeves = {k: v for k, v in C.SLEEVES.items()
+               if (not ONLY_SLEEVES or k in ONLY_SLEEVES.split(",")) and v["index"] in data}
     data = {k: I.add(v) for k, v in data.items()}
     dates = sorted(set.intersection(*[set(v.index) for v in data.values()]))
     start = dates[-1] - pd.Timedelta(days=int(months * 30.44))
@@ -139,7 +142,7 @@ def simulate(data: dict[str, pd.DataFrame], months: int = C.BACKTEST_MONTHS) -> 
         paused = bool(paused_until and t < paused_until)
 
         # 4. close-based management and new signals
-        for sleeve, cfg in C.SLEEVES.items():
+        for sleeve, cfg in sleeves.items():
             idx = data[cfg["index"]]
             row, prev = idx.loc[t], idx.iloc[idx.index.get_loc(t) - 1]
             reg = I.regime(row, prev)
@@ -203,7 +206,7 @@ def metrics(trades, curve, deposits, pauses) -> dict:
 def report(m: dict) -> str:
     pf = "inf" if m["profit_factor"] == float("inf") else f"{m['profit_factor']:.2f}"
     return "\n".join([
-        f"## Sean Realistisch backtest {m['start']} to {m['end']}",
+        f"## Sean Realistisch backtest {m['start']} to {m['end']} ({ONLY_SLEEVES or ', '.join(C.SLEEVES)})",
         f"${C.START_CAPITAL:.0f} start + ${C.MONTHLY_DEPOSIT:.0f} on the 1st of each month; 0.05% slippage per fill",
         "", "| Metric | Sean Realistisch | Same deposits into SPY |", "|---|---|---|",
         f"| Deposited | ${m['deposited']:,.2f} | ${m['deposited']:,.2f} |",

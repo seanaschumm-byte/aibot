@@ -18,8 +18,14 @@ jobs:
       - run: pip install -r sean_realistisch/requirements.txt
       - name: Unit tests
         run: python -m pytest -q test_sean_realistisch.py
-      - name: Backtest 24 months ($500 + $300/month)
+      - name: Backtest 24 months ($500 + $300/month), all 5 markets
         env:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python -m sean_realistisch.backtest
+      - name: Same backtest, old 3-market version (for comparison)
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          SLEEVES: "SPY,QQQ,GLD"
         run: python -m sean_realistisch.backtest

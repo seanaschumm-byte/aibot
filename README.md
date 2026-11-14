@@ -1,5 +1,7 @@
 # AI trading bots (Alpaca paper)
 
+**📊 Check each bot separately: [STATUS.md](STATUS.md)**, refreshed every hour.
+
 | # | Bot | Market | Order label |
 |---|---|---|---|
 | 1 | Stocks VWAP dip | US stocks, intraday | `aibot-` |

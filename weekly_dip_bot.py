@@ -213,7 +213,9 @@ def main() -> None:
             for l in led["lots"] if l["sell"] and l["sell"]["status"] == "filled"])
         wk = week_id(today)
         has_week = any(f"-{wk}-" in o["client_order_id"] for o in orders
-                       if o["client_order_id"].startswith(PREFIX + "-B-"))
+                       if o["client_order_id"].startswith(PREFIX + "-B-")
+                       and (o["status"] not in ("canceled", "rejected", "expired")
+                            or float(o.get("filled_qty") or 0) > 0))
         if START <= today <= END and not has_week:
             new_week(orders, today, fx, m)
         elif today > END and not has_week:

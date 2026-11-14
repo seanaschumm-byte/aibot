@@ -54,7 +54,7 @@ def crashed(bars: list[dict], hours: int = 720) -> bool:
     return bars[-1]["c"] / bars[-hours]["c"] - 1 < CRASH_30D
 
 
-def plan_orders(avg_by_coin: dict[str, float], cash: float, min_order: float = 1.0,
+def plan_orders(avg_by_coin: dict[str, float], cash: float, min_order: float = 10.0,
                 sigma_by_coin: dict[str, float] | None = None,
                 weights: list[float] | None = None) -> list[dict]:
     """Split the available cash equally over coins, and per coin over the levels."""
@@ -64,10 +64,15 @@ def plan_orders(avg_by_coin: dict[str, float], cash: float, min_order: float = 1
     out = []
     for coin, avg in avg_by_coin.items():
         sigma = (sigma_by_coin or {}).get(coin, 0.0)
+        carry = 0.0
         for i, (_, share) in enumerate(LEVELS):
-            usd = per_coin * (weights[i] if weights else share)
+            # Alpaca refuses crypto orders under $10: a too-small level hands its money to the
+            # next, deeper level (the budget stays the same, it is just bought cheaper)
+            usd = per_coin * (weights[i] if weights else share) + carry
             if usd < min_order:
+                carry = usd
                 continue
+            carry = 0.0
             price = level_price(avg, sigma, i)
             out.append({"coin": coin, "level": i + 1, "dist": price / avg - 1, "limit": price,
                         "usd": usd, "qty": usd / price})

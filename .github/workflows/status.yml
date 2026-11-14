@@ -1,0 +1,38 @@
+name: "Status page"
+
+on:
+  schedule:
+    - cron: "55 * * * *"     # every hour
+  workflow_dispatch:
+
+concurrency:
+  group: status-page
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Build STATUS.md
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python status.py >> "$GITHUB_STEP_SUMMARY"
+      - name: Save
+        run: |
+          git config user.name "status-page"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add STATUS.md
+          git diff --cached --quiet && exit 0
+          git commit -q -m "status $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3 4 5; do git pull -q --rebase && git push -q && exit 0; sleep $((i*5)); done
+          exit 1

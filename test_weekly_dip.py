@@ -56,3 +56,12 @@ def test_bollinger_levels_only_go_deeper_in_wild_weeks():
     assert all(w <= c for w, c in zip(wild, calm))             # never higher than the fixed levels
     plan = plan_orders({"X": 100.0}, 100.0, sigma_by_coin={"X": 8.0})
     assert abs(sum(p["usd"] for p in plan) - 100) < 1e-9
+
+
+def test_small_levels_roll_into_deeper_ones():
+    # $32 per coin: 20/25/25/30% = 6.4, 8, 8, 9.6 -> all under $10 on their own
+    plan = plan_orders({"ETH/USD": 2000.0}, 32.0)
+    assert all(p["usd"] >= 10 for p in plan)
+    assert abs(sum(p["usd"] for p in plan) - 32.0) < 1e-9           # nothing lost
+    assert plan[-1]["level"] == 4                                     # money ends up deeper
+    assert plan_orders({"ETH/USD": 2000.0}, 8.0) == []                # under $10 total: no order

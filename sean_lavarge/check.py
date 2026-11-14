@@ -52,6 +52,21 @@ def diagnose() -> None:
             print(f"[{'demo' if sandbox else 'live'}] ERROR {type(e).__name__}: {str(e)[:300]}")
 
 
+def sandboxes() -> None:
+    """Which demo/testnet exchanges answer from this machine?"""
+    for eid, sym in [("bybit", "BTC/USDT:USDT"), ("binanceusdm", "BTC/USDT:USDT"), ("okx", "BTC/USDT:USDT"),
+                     ("bitget", "BTC/USDT:USDT"), ("bitmex", "BTC/USDT:USDT"), ("krakenfutures", "BTC/USD:USD")]:
+        try:
+            ex = getattr(ccxt, eid)({"enableRateLimit": True, "options": {"defaultType": "swap"}})
+            ex.set_sandbox_mode(True)
+            ex.load_markets()
+            ok = sym in ex.markets
+            n = len(ex.fetch_ohlcv(sym, "4h", None, 50)) if ok else 0
+            print(f"SANDBOX {eid}: {len(ex.markets)} markets, {sym} {'OK' if ok else 'missing'}, {n} candles")
+        except Exception as e:
+            print(f"SANDBOX {eid}: ERROR {type(e).__name__}: {str(e)[:160]}")
+
+
 if __name__ == "__main__":
-    diagnose()
+    sandboxes()
     main()

@@ -104,3 +104,22 @@ These are summaries of their public teaching, not copies of their trades.
 ## Honest expectations
 
 Trend-breakout systems typically **lose on most trades** (often 60–70%) and rely on a few big winners. Without leverage, +500% total would need BTC to roughly multiply 6× during the bot's trades, so it's very unlikely. In practice expect a modest gain or loss on the €500.
+
+---
+
+# Crypto dip bot (`dip_bot.py`)
+
+The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7.
+
+- **At most one €25 buy per day** (UTC day), from 14 Nov to 14 Dec 2026. If no coin shows a good setup that day, it buys nothing.
+- **Every buy gets its own sell order at +20%.** It stays open (GTC) until it fills, with no stop-loss.
+- **Coins:** ETH, SOL, DOGE, XRP, AVAX and LINK. BTC is left out because the BTC bot trades it.
+- **Schedule:** checks every hour at :37. Its orders carry a `client_order_id` starting with `dip25-`.
+
+## Rules (1-hour bars)
+
+1. **Uptrend:** price above the 200 EMA, and the 20 EMA above the 50 EMA.
+2. **Dip:** in the last 6 hours, price came back to the 24-hour VWAP: no more than 0.5% above it and no more than 3% below it.
+3. **No falling knife:** no red bar in the dip with more than 2.5× normal volume.
+4. **Confirmation:** a strong green bar that closes in the upper half of its range, back above VWAP, with a higher close and more volume than the previous bar. Entry must be no more than 2% above VWAP (no chasing).
+5. **Choice:** if several coins qualify, the one with the strongest 24-hour gain is bought.

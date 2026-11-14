@@ -1,13 +1,13 @@
 # Sean Realistisch: trend-following ETF bot (Alpaca)
 
-A moderately aggressive, **no-margin** trend follower across **5 markets**: stocks (SPY/QQQ, switching to 2× SSO/QLD only in a strong bull market), gold (GLD), US government bonds (TLT) and bitcoin (IBIT). Each market gets the same simple trend rule. When one market goes sideways another often trends, which is how professional trend followers diversify.
+A moderately aggressive, **no-margin** trend follower across **5 markets**: stocks (SPY/QQQ, switching to 2× SSO/QLD only in a strong bull market), gold (GLD) and US government bonds: long-term (TLT) and medium-term (IEF). No bitcoin: the other bots already hold plenty of crypto. Each market gets the same simple trend rule. When one market goes sideways another often trends, which is how professional trend followers diversify.
 
 | | |
 |---|---|
 | Broker | Alpaca via `alpaca-py`. `PAPER = True` (default) uses the paper endpoint. |
 | Capital | $500 start + $300 on the 1st of every month |
 | Sizing | Fractional (notional) orders. 2% risk per trade, max 40% of equity per position, at most 100% of cash in total (no borrowing). |
-| Positions | At most 5: one per sleeve (SPY/SSO, QQQ/QLD, GLD, TLT, IBIT). Only SPY and QQQ ever use 2× ETFs. |
+| Positions | At most 5: one per sleeve (SPY/SSO, QQQ/QLD, GLD, TLT, IEF). Only SPY and QQQ ever use 2× ETFs. |
 | Schedule | Every 30 min on weekdays. It only trades 9:45–15:50 New York time, when the market is open. |
 | Order label | `sr-` |
 

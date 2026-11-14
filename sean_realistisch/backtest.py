@@ -22,7 +22,7 @@ from . import config as C
 from . import indicators as I
 from . import risk_manager as R
 
-SYMBOLS = ["SPY", "QQQ", "SSO", "QLD", "GLD", "TLT", "IBIT"]
+SYMBOLS = ["SPY", "QQQ", "SSO", "QLD", "GLD", "TLT", "IEF"]
 ONLY_SLEEVES = os.getenv("SLEEVES")   # e.g. "SPY,QQQ,GLD" to compare with the old 3-market version
 
 

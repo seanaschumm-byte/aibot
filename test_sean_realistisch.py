@@ -84,7 +84,7 @@ def test_ledger_own_orders_only():
 def test_backtest_runs():
     data = {"SPY": daily(800, 0.0006, 400, 1), "QQQ": daily(800, 0.0008, 350, 2),
             "SSO": daily(800, 0.0012, 80, 3), "QLD": daily(800, 0.0016, 90, 4), "GLD": daily(800, 0.0003, 180, 5),
-            "TLT": daily(800, -0.0002, 90, 6), "IBIT": daily(800, 0.0015, 40, 7)}
+            "TLT": daily(800, -0.0002, 90, 6), "IEF": daily(800, 0.0001, 95, 7)}
     for d in data.values():
         d.loc[d.index[::13], "volume"] = 2e6
     m = simulate(data)
@@ -150,11 +150,11 @@ def setup(tmp_path, monkeypatch):
 
 
 def test_cycle_buy_tp_and_stop(setup):
-    bars = {s: daily(320, 0.002, 100, i) for i, s in enumerate(["SPY", "QQQ", "SSO", "QLD", "GLD", "TLT", "IBIT"])}
+    bars = {s: daily(320, 0.002, 100, i) for i, s in enumerate(["SPY", "QQQ", "SSO", "QLD", "GLD", "TLT", "IEF"])}
     spy = bars["SPY"]
     spy.loc[spy.index[-1], "close"] = spy["close"].iloc[-2] * 0.97        # sharp dip -> RSI(2) low
     spy.loc[spy.index[-1], "low"] = spy["close"].iloc[-1] * 0.995
-    for s in ("QQQ", "GLD", "TLT", "IBIT"):                                # no signal there
+    for s in ("QQQ", "GLD", "TLT", "IEF"):                                # no signal there
         bars[s]["close"] = np.linspace(200, 100, 320)
     b = FakeBroker(bars)
     now = dt.datetime(2026, 11, 20, 15, tzinfo=dt.timezone.utc)

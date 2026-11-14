@@ -27,11 +27,12 @@ SLEEVES = {
     "SPY": {"index": "SPY", "x1": "SPY", "x2": "SSO"},
     "QQQ": {"index": "QQQ", "x1": "QQQ", "x2": "QLD"},
     "GLD": {"index": "GLD", "x1": "GLD", "x2": None},     # defensive: gold, never leveraged
-    "TLT": {"index": "TLT", "x1": "TLT", "x2": None},     # US long-term government bonds, never leveraged
-    "BTC": {"index": "IBIT", "x1": "IBIT", "x2": None},   # bitcoin via the iShares ETF, never leveraged
+    "TLT": {"index": "TLT", "x1": "TLT", "x2": None},     # US 20+ year government bonds, never leveraged
+    "IEF": {"index": "IEF", "x1": "IEF", "x2": None},     # US 7-10 year government bonds: calmer than TLT
 }
 # Professional trend followers use one simple rule on many markets instead of many indicators on
-# one market: when stocks go sideways, gold, bonds or bitcoin often trend (and vice versa).
+# one market: when stocks go sideways, gold or bonds often trend (and vice versa).
+# No bitcoin here on purpose: the other bots already hold plenty of crypto.
 LEVERAGED = {"SSO", "QLD"}
 
 # ---------------------------------------------------------------- regime (PTJ / Seykota)

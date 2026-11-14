@@ -152,3 +152,41 @@ The same "buy the dip in an uptrend" idea as the stock bot, but for crypto, 24/7
 | **Stop-losses** (most trend traders) | Always cap the loss | ❌ Not used. Mean reversion with a stop often sells right at the bottom. The risk is that a coin keeps falling and the money stays stuck. |
 
 **Typical behaviour:** many small wins (+12%) and occasionally a position that stays "underwater" for a long time. It works best when the market moves sideways, and worst in a long downtrend.
+
+---
+
+# Learning from mistakes: market check and trade journal
+
+## Market check (`market.py`)
+
+Before trading, every bot looks at the whole market. Each data source is optional: if one fails, the bot carries on with normal settings.
+
+| Signal | Source |
+|---|---|
+| Crypto Fear & Greed Index (0 = panic, 100 = greed) | alternative.me (free) |
+| BTC trend: price vs its 50-day average, and 7-day change | Alpaca |
+| Stock market: SPY vs its 50-day average | Alpaca |
+
+How each bot reacts:
+
+| Bot | Reaction |
+|---|---|
+| Stock bot | Risks 0.5% per trade instead of 1% while SPY is below its 50-day average |
+| Crypto dip bot (€25/day) | Buys 50% of the usual amount in extreme greed, 75% in greed |
+| Weekly dip bot | **Extreme fear:** puts more money on the deep levels (10/20/30/40%), following Buffett's "be greedy when others are fearful". **Greed:** uses 75% of the budget, and 50% in extreme greed; the rest carries over to next week. |
+| BTC bot | Only logs the market mood. Breakouts need momentum, so greed is not a reason to skip. |
+
+## Trade journal (`journal/*.jsonl`)
+
+After each run, the workflow commits the bot's journal file to the repo: `stocks`, `btc`, `dip25` or `weekly_dip`. Each line is one event:
+
+- `entry`: a buy, with the reasons and market conditions at that moment.
+- `close`: a finished trade, with profit in $ (after the sell fee) and in %.
+- `week`: the weekly dip bot's average price, volatility and buy levels per coin.
+- `market`: one market-mood snapshot per day.
+
+## Learning loop
+
+Every Saturday the scheduled Claude review reads the journals and Alpaca's order history. It looks for patterns, such as "dips bought in extreme fear won more often" or "stock trades after 14:00 lost". It then proposes small rule changes, and **nothing changes unless you approve it**.
+
+Automatic tuning only makes sense after about 30 trades per bot. Before that, patterns are mostly luck.

@@ -14,6 +14,8 @@ import time
 
 from bot import api, eurusd, DATA_URL, DRY_RUN
 from crypto_strategy import CParams, atr, entry_signal, trailing_stop
+import journal
+import market
 
 SYMBOL = "BTC/USD"
 POS_SYMBOL = "BTCUSD"
@@ -74,7 +76,8 @@ def ledger(orders: list[dict]) -> dict:
         px = float(o["filled_avg_price"])
         when = o.get("filled_at") or o["submitted_at"]
         if o["side"] == "buy":
-            cur = {"opened": when, "entry": px, "qty": q, "cost": q * px, "proceeds": 0.0}
+            cur = {"opened": when, "entry": px, "qty": q, "cost": q * px, "proceeds": 0.0,
+                   "cid": o["client_order_id"]}
             held += q
         else:
             held -= q
@@ -166,6 +169,12 @@ def main() -> None:
     text, ret = summary(led, price, fx)
 
     if mode == "run":
+        m = market.mood(api, DATA_URL)
+        log(market.summary_line(m))
+        journal.record_closes("btc", [
+            {"cid": t.get("cid"), "entry": t["entry"], "pnl_usd": round(t["pnl"], 4),
+             "pnl_pct": round(t["pnl"] / t["cost"], 4), "opened": t["opened"], "closed": t.get("closed")}
+            for t in led["closed"] if t.get("cid")])
         a = atr(bars, P.atr_n)
         if led["open"]:
             t = led["open"]
@@ -195,7 +204,10 @@ def main() -> None:
                 notional = EUR_PER_TRADE * fx
                 log(f"BREAKOUT above {sig['breakout_level']:,.2f}: buy ${notional:.2f} BTC, "
                     f"stop {sig['stop']:,.2f}")
-                o = order("buy", f"{PREFIX}-B-{int(time.time())}", notional=f"{notional:.2f}")
+                bcid = f"{PREFIX}-B-{int(time.time())}"
+                o = order("buy", bcid, notional=f"{notional:.2f}")
+                if o:
+                    journal.write("btc", "entry", cid=bcid, usd=round(notional, 2), signal=sig, mood=m)
                 if o:
                     for _ in range(20):
                         o = api("GET", f"/v2/orders/{o['id']}")

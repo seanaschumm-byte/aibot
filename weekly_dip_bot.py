@@ -14,6 +14,8 @@ import sys
 import time
 
 from bot import api, eurusd, DATA_URL, DRY_RUN
+import journal
+import market
 from weekly_dip_strategy import (TAKE_PROFIT, crashed, fmt_price, level_price, plan_orders,
                                  weekly_sigma, weekly_vwap, LEVELS)
 
@@ -109,7 +111,7 @@ def place_sell(lot: dict) -> None:
                                        "client_order_id": lot["cid"].replace("-B-", "-S-", 1)})
 
 
-def new_week(orders: list[dict], today: dt.date, fx: float) -> None:
+def new_week(orders: list[dict], today: dt.date, fx: float, m: dict) -> None:
     wk = week_id(today)
     # 1. cancel last week's unfilled buys (their money returns to the budget)
     for o in orders:
@@ -142,7 +144,15 @@ def new_week(orders: list[dict], today: dt.date, fx: float) -> None:
                         for i in range(len(LEVELS))))
 
     # 3. place the grid
-    for p in plan_orders(avgs, led["cash"] * 0.995, sigma_by_coin=sigmas):
+    use, weights = market.weekly_plan(m)
+    log(f"market mood {m.get('fear_greed_label')}: using {use:.0%} of available cash, "
+        f"level weights {weights}")
+    plan = plan_orders(avgs, led["cash"] * 0.995 * use, sigma_by_coin=sigmas, weights=weights)
+    journal.write("weekly_dip", "week", week=wk, cash=round(led["cash"], 2), use=use, weights=weights,
+                  mood=m, coins={c: {"avg": avgs[c], "sigma_pct": sigmas[c] / avgs[c],
+                                     "levels": [level_price(avgs[c], sigmas[c], i) for i in range(len(LEVELS))]}
+                                 for c in avgs})
+    for p in plan:
         tag = p["coin"].split("/")[0]
         cid = f"{PREFIX}-B-{tag}-{wk}-L{p['level']}-{int(time.time())}"
         log(f"BUY LIMIT {p['coin']} {p['qty']:.6f} @ {fmt_price(p['limit'])} (${p['usd']:.2f}, "
@@ -183,15 +193,29 @@ def main() -> None:
     orders = my_orders()
 
     if mode == "run":
+        m = market.mood(api, DATA_URL)
+        log(market.summary_line(m))
         led = ledger(orders, today, fx)
         for lot in led["lots"]:                    # every fill gets its +12% sell
             if not lot["sell"] and lot["done"]:
                 place_sell(lot)
+            if lot["done"] and not journal.has("weekly_dip", "entry", "cid", lot["cid"]):
+                level = lot["cid"].split("-")[4] if lot["cid"].count("-") >= 5 else "?"
+                journal.write("weekly_dip", "entry", cid=lot["cid"], symbol=lot["symbol"],
+                              price=lot["price"], usd=round(lot["qty"] * lot["price"], 2),
+                              level=level, mood=m)
+        journal.record_closes("weekly_dip", [
+            {"cid": l["cid"], "symbol": l["symbol"], "buy": l["price"],
+             "sell": float(l["sell"]["filled_avg_price"]),
+             "pnl_usd": round(float(l["sell"]["filled_qty"]) * float(l["sell"]["filled_avg_price"])
+                              * 0.9975 - l["qty"] * l["price"], 4),
+             "closed": l["sell"].get("filled_at")}
+            for l in led["lots"] if l["sell"] and l["sell"]["status"] == "filled"])
         wk = week_id(today)
         has_week = any(f"-{wk}-" in o["client_order_id"] for o in orders
                        if o["client_order_id"].startswith(PREFIX + "-B-"))
         if START <= today <= END and not has_week:
-            new_week(orders, today, fx)
+            new_week(orders, today, fx, m)
         elif today > END and not has_week:
             for o in orders:   # test period over: stop buying, keep the +12% sells
                 if o["client_order_id"].startswith(PREFIX + "-B-") and o["status"] in ("new", "accepted"):

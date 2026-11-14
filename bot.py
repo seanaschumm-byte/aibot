@@ -23,6 +23,8 @@ from zoneinfo import ZoneInfo
 import requests
 
 from strategy import Params, evaluate, market_ok, day_change, position_size
+import journal
+import market
 
 # ------------------------------------------------------------------ config
 START_DATE = dt.date(2026, 11, 16)      # first Monday
@@ -289,7 +291,12 @@ def look_for_entry(led: dict, now: dt.datetime, equity: float) -> None:
     if not signals:
         return
     sig = max(signals, key=lambda s: s.rel_strength)
-    qty = position_size(equity, led["cash"], sig.entry, sig.stop, RISK_PER_TRADE)
+    m = market.mood(api, DATA_URL)
+    log(market.summary_line(m))
+    risk = RISK_PER_TRADE * market.stock_risk_factor(m)
+    if risk < RISK_PER_TRADE:
+        log(f"SPY below its 50-day average: risking {risk:.1%} instead of {RISK_PER_TRADE:.0%}")
+    qty = position_size(equity, led["cash"], sig.entry, sig.stop, risk)
     if qty * sig.entry < 1:
         return log(f"position too small (${qty * sig.entry:.2f}) for {sig.symbol}")
     log(f"BUY SIGNAL {sig.symbol} entry~{sig.entry} stop {sig.stop} target {sig.target} "
@@ -297,6 +304,10 @@ def look_for_entry(led: dict, now: dt.datetime, equity: float) -> None:
     cid = f"{PREFIX}-B-{sig.symbol}-{int(time.time())}-{round(sig.stop*100)}-{round(sig.target*100)}"
     o = submit(sig.symbol, "buy", qty, cid)
     if o:
+        journal.write("stocks", "entry", cid=cid, symbol=sig.symbol, entry=sig.entry, stop=sig.stop,
+                      target=sig.target, rvol=round(sig.rvol, 2), rel_strength=round(sig.rel_strength, 4),
+                      minutes_after_open=round(minutes), risk_pct=risk, notes=sig.notes, mood=m,
+                      candidates=len(signals))
         o = wait_fill(o["id"])
         filled = float(o.get("filled_qty") or 0)
         if filled > 0:
@@ -364,6 +375,10 @@ def main() -> None:
         log(f"waiting for start date {START_DATE}")
         return
     log(f"budget: deposits ${led['deposits_usd']:.2f}, cash ${led['cash']:.2f}, equity ${equity:.2f}")
+    journal.record_closes("stocks", [
+        {"cid": t.get("buy_cid"), "symbol": t["symbol"], "pnl_usd": round(t["pnl"], 4),
+         "pnl_pct": round(t["pnl"] / t["cost"], 4), "opened": t["opened"], "closed": t["closed"]}
+        for t in led["closed_trades"] if t.get("buy_cid")])
     manage(led, now)
     led, equity = snapshot(fx)  # refresh after any exits
     look_for_entry(led, now, equity)

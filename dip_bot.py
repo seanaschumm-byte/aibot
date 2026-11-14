@@ -12,6 +12,8 @@ import sys
 import time
 
 from bot import api, eurusd, DATA_URL, DRY_RUN
+import journal
+import market
 from dip_strategy import DipParams, dip_signal
 
 COINS = ["ETH/USD", "SOL/USD", "DOGE/USD", "XRP/USD", "AVAX/USD", "LINK/USD"]  # not BTC: btc bot
@@ -118,6 +120,16 @@ def main() -> None:
     today = dt.datetime.now(dt.timezone.utc).date()
 
     if mode == "run":
+        m = market.mood(api, DATA_URL)
+        log(market.summary_line(m))
+        journal.daily_market("dip25", m)
+        journal.record_closes("dip25", [
+            {"cid": l["cid"], "symbol": l["symbol"], "buy": l["price"],
+             "sell": float(l["sell"]["filled_avg_price"]),
+             "pnl_usd": round(float(l["sell"]["filled_qty"]) * float(l["sell"]["filled_avg_price"])
+                              * 0.9975 - l["qty"] * l["price"], 4),
+             "closed": l["sell"].get("filled_at")}
+            for l in all_lots if l["qty"] > 0 and l["sell"] and l["sell"]["status"] == "filled"])
         # safety net: every filled buy must have its +20% sell order
         for l in all_lots:
             if l["qty"] > 0 and not l["sell"]:
@@ -138,7 +150,10 @@ def main() -> None:
                     signals.append((c, sig))
             if signals:
                 coin, sig = max(signals, key=lambda x: x[1]["change_24h"])   # strongest coin wins
-                notional = EUR_PER_DAY * fx
+                factor = market.crypto_size_factor(m)
+                notional = EUR_PER_DAY * fx * factor
+                if factor < 1:
+                    log(f"market is greedy ({m.get('fear_greed_label')}): buying {factor:.0%} of EUR 25")
                 cid = f"{PREFIX}-B-{coin.split('/')[0]}-{int(time.time())}"
                 log(f"BUY {coin} ${notional:.2f}: dip to VWAP {sig['vwap']:.4f}, "
                     f"low {sig['dip_low']:.4f}, 24h {sig['change_24h']:+.1%}" + (" (dry run)" if DRY_RUN else ""))
@@ -151,6 +166,9 @@ def main() -> None:
                         if o["status"] == "filled":
                             break
                         time.sleep(1)
+                    journal.write("dip25", "entry", cid=cid, symbol=coin, usd=round(notional, 2),
+                                  signal=sig, size_factor=factor, mood=m,
+                                  others={c: s["change_24h"] for c, s in signals})
                     if o["status"] == "filled":
                         place_take_profit({"cid": cid, "symbol": coin, "qty": float(o["filled_qty"]),
                                            "price": float(o["filled_avg_price"])})

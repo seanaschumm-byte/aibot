@@ -105,5 +105,17 @@ def test_core_sells_at_60_and_buys_back_at_minus_30():
     c = np.array(flat + up + down)
     df = pd.DataFrame({"open": c, "high": c * 1.001, "low": c * 0.999, "close": c}, index=idx)
     r = simulate(df, idx[0], "core", Rules(), 300, 60)
-    assert any("sold all" in e for e in r["core_events"])
+    assert any("sold 100%" in e for e in r["core_events"])
     assert any("bought back" in e for e in r["core_events"])
+
+
+def test_core_variant_c_sells_a_quarter():
+    idx = pd.bdate_range("2025-01-01", periods=400, tz="UTC")
+    c = np.array([100.0] * 100 + list(np.linspace(100, 250, 100)) + list(np.linspace(250, 150, 200)))
+    df = pd.DataFrame({"open": c, "high": c * 1.001, "low": c * 0.999, "close": c}, index=idx)
+    full = simulate(df, idx[0], "core", Rules(), 300, 60, 0.0, 1.0)
+    part = simulate(df, idx[0], "core", Rules(), 300, 60, 0.0, 0.25)
+    never = simulate(df, idx[0], "core", Rules(), 300, 60, 0.0, 1.0, 99.0)
+    assert any("sold 25%" in e for e in part["core_events"]) and any("bought back" in e for e in part["core_events"])
+    assert not never["core_events"]
+    assert len({round(x["deposited"]) for x in (full, part, never)}) == 1

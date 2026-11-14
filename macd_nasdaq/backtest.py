@@ -39,7 +39,7 @@ def download(months: float, symbol: str = "QQQ") -> pd.DataFrame:
 
 
 def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(), start_eur: float = 500.0,
-             weekly_eur: float = 100.0, fee: float = 0.0) -> dict:
+             weekly_eur: float = 100.0, fee: float = 0.0, core_sell: float = 1.0, core_tp: float = 0.60) -> dict:
     """mode: 'new' (dips + profit rules), 'macd' (plain crossover), 'dca' (buy every week),
     'core' (buy every week; sell everything at +60% on the average cost; buy back when the price is
     30% under the highest price since that sale)."""
@@ -48,7 +48,7 @@ def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(
     cash, deposited, lots, curve, closed, week = start_eur * EURUSD, start_eur, [], [], [], None
     pending_buy = pending_exit = False
     slip = 0.0005 + fee
-    sold, core_events = None, []
+    sold, core_events, reserve = None, [], 0.0   # reserve: money from a partial core sale, waiting for -30%
 
     def buy(t, usd, px):
         nonlocal cash
@@ -81,6 +81,8 @@ def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(
                 sell(lot, lot["qty"], b["open"], t)
         if mode == "dca" or (mode == "core" and sold is None and (dep or i == 0)):
             buy(t, cash, b["open"])
+        elif mode == "core" and sold is not None and core_sell < 1 and dep:
+            buy(t, cash - reserve, b["open"])       # partial sale: weekly buys go on, the reserve waits
         elif mode == "macd":
             if long_:
                 buy(t, cash, b["open"])
@@ -95,18 +97,21 @@ def simulate(df: pd.DataFrame, start: pd.Timestamp, mode: str, r: Rules = Rules(
             held = [l for l in lots if l["qty"] > 1e-9]
             if sold is None and held:
                 avg = sum(l["qty"] * l["entry"] for l in held) / sum(l["qty"] for l in held)
-                if b["high"] >= avg * 1.60:
-                    px = max(avg * 1.60, b["open"])
+                if b["high"] >= avg * (1 + core_tp):
+                    px = max(avg * (1 + core_tp), b["open"])
+                    before = cash
                     for lot in held:
-                        sell(lot, lot["qty"], px, t)
+                        sell(lot, lot["qty"] * core_sell, px, t)
+                    reserve = cash - before
                     sold = {"peak": px}
-                    core_events.append(f"{t:%Y-%m-%d} sold all at {px:.2f} (+60%)")
+                    core_events.append(f"{t:%Y-%m-%d} sold {core_sell:.0%} at {px:.2f} (+{core_tp:.0%})")
             elif sold is not None:
                 sold["peak"] = max(sold["peak"], b["high"])
                 trigger = sold["peak"] * 0.70
                 if b["low"] <= trigger:
                     px = min(trigger, b["open"])
                     buy(t, cash, px)
+                    reserve = 0.0
                     core_events.append(f"{t:%Y-%m-%d} bought back at {px:.2f} (-30% from {sold['peak']:.2f})")
                     sold = None
         # 2. intraday profit rules (new version only)
@@ -193,16 +198,23 @@ def main() -> None:
                      f"**{tot['ret']:+.1%}** | {tot['dd']:.1%} | {tot['sharpe']:.2f} |")
         if mode == "new":
             per_market = [f"{tag} {r['ret']:+.1%} (EUR {r['final'] - r['deposited']:+,.0f})" for tag, r in runs.items()]
-    # core + satellite: 60% buy-and-hold core (sell at +60%, buy back at -30%), 40% the new MACD rules
-    core_runs, sat_runs = {}, {}
-    for tag, (_, lb, fee) in MARKETS.items():
-        core_runs[tag] = simulate(data[tag], start, "core", Rules(dip_lookback=lb), 300.0 * share, 60.0 * share, fee)
-        sat_runs[tag] = simulate(data[tag], start, "new", Rules(dip_lookback=lb), 200.0 * share, 40.0 * share, fee)
-    tot = combine([r["curve"] for r in list(core_runs.values()) + list(sat_runs.values())])
-    dep = sum(r["deposited"] for r in list(core_runs.values()) + list(sat_runs.values()))
-    lines.append(f"| **Core 60% + satellite 40%** | EUR {dep:,.0f} | EUR {tot['final']:,.0f} | EUR {tot['final'] - dep:+,.0f} | "
-                 f"**{tot['ret']:+.1%}** | {tot['dd']:.1%} | {tot['sharpe']:.2f} |")
-    events = [f"{tag}: " + "; ".join(r["core_events"]) for tag, r in core_runs.items() if r["core_events"]]
+    # core + satellite: 60% core, 40% the new MACD rules. Core variants:
+    #   current: sell 100% at +60%, buy back at -30%   C: sell 25% at +60%, rest keeps running   A: never sell
+    events = []
+    for label, sell_frac, tp in (("Core 60% + satellite 40% (core sells 100% at +60%, now live)", 1.0, 0.60),
+                                 ("**C: core sells 25% at +60%**", 0.25, 0.60),
+                                 ("A: core never sells", 1.0, 99.0)):
+        core_runs, sat_runs = {}, {}
+        for tag, (_, lb, fee) in MARKETS.items():
+            core_runs[tag] = simulate(data[tag], start, "core", Rules(dip_lookback=lb), 300.0 * share, 60.0 * share,
+                                      fee, sell_frac, tp)
+            sat_runs[tag] = simulate(data[tag], start, "new", Rules(dip_lookback=lb), 200.0 * share, 40.0 * share, fee)
+        tot = combine([r["curve"] for r in list(core_runs.values()) + list(sat_runs.values())])
+        dep = sum(r["deposited"] for r in list(core_runs.values()) + list(sat_runs.values()))
+        lines.append(f"| {label} | EUR {dep:,.0f} | EUR {tot['final']:,.0f} | EUR {tot['final'] - dep:+,.0f} | "
+                     f"**{tot['ret']:+.1%}** | {tot['dd']:.1%} | {tot['sharpe']:.2f} |")
+        events += [f"{label.strip('*').split(':')[0]} {tag}: " + "; ".join(r["core_events"])
+                   for tag, r in core_runs.items() if r["core_events"]]
     lines += ["", "New version per market: " + ", ".join(per_market),
               "Core +60% / -30% events: " + (" | ".join(events) if events else "none (the +60% level was never reached)")]
     text = "\n".join(lines)

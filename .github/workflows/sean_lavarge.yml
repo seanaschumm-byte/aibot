@@ -2,12 +2,12 @@ name: "Sean Lavarge"
 
 on:
   schedule:
-    - cron: "2,17,32,47 * * * *"   # every 15 minutes, 24/7 (signals use closed 4h candles)
+    - cron: "2,17,32,47 14-20 * * 1-5"   # every 15 min in US market hours (it trades 2x crypto ETFs on Alpaca)
   workflow_dispatch:
     inputs:
       mode:
-        description: "run | check | backtest"
-        default: check
+        description: "run | binance | check | backtest"
+        default: run
 
 concurrency:
   group: sean-lavarge
@@ -21,8 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      TESTNET: "true"            # demo exchange, fake money. Set to "false" only after 30 days of testing.
-      EXCHANGE_ID: binanceusdm
+      TESTNET: "true"            # paper / demo money. Set to "false" only after 30 days of testing.
+      PAPER: "true"              # Alpaca paper account
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+      EXCHANGE_ID: binanceusdm   # only for mode "binance" (futures testnet version)
       EXCHANGE_API_KEY: ${{ secrets.SEAN_EXCHANGE_API_KEY }}
       EXCHANGE_SECRET: ${{ secrets.SEAN_EXCHANGE_SECRET }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -34,12 +37,13 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r sean_lavarge/requirements.txt
+      - run: pip install -r sean_lavarge/requirements.txt alpaca-py
       - name: Run
         run: |
           MODE="${{ github.event.inputs.mode || 'run' }}"
           case "$MODE" in
-            run)      python -m sean_lavarge.main ;;
+            run)      python -m sean_lavarge.alpaca_main ;;
+            binance)  python -m sean_lavarge.main ;;
             check)    python -m sean_lavarge.check ;;
             backtest) python -m sean_lavarge.backtest ;;
           esac

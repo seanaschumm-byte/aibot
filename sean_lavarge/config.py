@@ -41,7 +41,7 @@ ALLOW_SHORTS = True
 # ---------------------------------------------------------------- risk (PTJ / Seykota / Livermore)
 RISK_PER_TRADE = 0.015              # max 1.5% of equity lost if the stop is hit
 STOP_ATR = 2.0                      # hard stop 2x ATR from entry
-MAX_LEVERAGE = 10                   # isolated margin, never more than 10x
+MAX_LEVERAGE = int(os.getenv("MAX_LEVERAGE", "10"))   # isolated margin, never more than 10x
 PYRAMID_TRIGGER_ATR = 1.5           # +1.5 ATR in profit -> stop to breakeven + add a unit
 PYRAMID_FRACTION = 0.5              # pyramid unit = 50% of the first unit
 MAX_PYRAMIDS = 1

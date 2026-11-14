@@ -1,4 +1,19 @@
-# Sean Lavarge: leveraged trend-breakout futures bot
+# Sean Lavarge: leveraged trend-breakout bot
+
+**Now running on Alpaca** (`alpaca_main.py`, your existing Alpaca paper keys). The signals are the same 4h Turtle breakouts on 24/7 BTC/ETH/SOL data. They are executed during US market hours with crypto ETFs:
+
+| Signal | BTC | ETH | SOL |
+|---|---|---|---|
+| Long | BITU (2×) | ETHT (2×) | SOLZ (1×; the 2× SOLT is not fractionable) |
+| Short | SBIT (−2×) | ETHD (−2×) | (no inverse ETF: no SOL shorts) |
+
+- **Leverage:** at most 2× from the ETF times 2× margin, so about 4× (still capped at 10×).
+- **Stop and size:** calculated on the coin and translated to the ETF (1% in BTC ≈ 2% in BITU). The ETF stop is a day stop order, placed again every session.
+- **Gap risk:** crypto also moves at night and over the weekend, but the ETFs only trade 15:30–22:00 Dutch time. A big overnight move can open beyond the stop.
+- **Order label:** `sl-`. State is kept in `state/alpaca_state.json`.
+
+The futures version below (Binance testnet, up to 10×, 24/7) is still available via **Run workflow → mode `binance`** once you add Binance testnet keys.
+
 
 ⚠️ **Leverage can lose money fast.** Run it on the demo exchange (`TESTNET = True`, the default) for at least 30 days before even thinking about real euros.
 

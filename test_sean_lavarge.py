@@ -187,3 +187,66 @@ def test_cycle_entry_pyramid_and_stop(one_symbol):
     s = M.run_once(ex, now + dt.timedelta(minutes=30))
     assert not s["positions"] and s["closed"][-1]["reason"] == "stop"
     assert json.load(open(C.STATE_FILE))["closed"]
+
+
+# ---------------------------------------------------------------- Alpaca ETF version
+from types import SimpleNamespace
+from sean_lavarge import alpaca_main as A
+
+
+def test_etf_translation():
+    assert A.etf_stop(100, 2, 0.03) == pytest.approx(94)            # BTC -3% -> 2x ETF -6%
+    v, capped = A.etf_value(500, 0.03, 2, 10_000)                   # 7.5 / (2*0.03) = 125
+    assert v == pytest.approx(125) and not capped
+    v, capped = A.etf_value(500, 0.002, 2, 10_000)                  # tight stop -> margin cap 2x
+    assert capped and v == pytest.approx(A.MARGIN_MULTIPLIER * 500)
+    assert A.etf_value(500, 0.03, 2, 50)[0] == pytest.approx(50)    # buying-power cap
+
+
+class FakeAlpaca:
+    def __init__(self, df, open_=True):
+        self.df, self.open_, self.orders, self.stop, self.n = df, open_, [], {}, 0
+        self.px = float(df["close"].iloc[-1]) * 1.001
+
+    def market_open(self):
+        return self.open_, "open" if self.open_ else "closed"
+
+    def bars_4h(self, u):
+        return self.df if u == "BTC/USD" else self.df.iloc[:50]
+
+    def crypto_price(self, u):
+        return self.px
+
+    def etf_price(self, e):
+        return 50.0
+
+    def my_orders(self):
+        return list(self.orders)
+
+    def buy(self, e, usd):
+        self.orders.append({"symbol": e, "side": "buy", "qty": usd / 50, "price": 50.0, "time": "2026-11-20T15:00"})
+        return SimpleNamespace(filled_qty=usd / 50, filled_avg_price=50.0, status="filled")
+
+    def sell(self, e, q):
+        self.orders.append({"symbol": e, "side": "sell", "qty": q, "price": 50.0, "time": "2026-11-20T16:00"})
+        return SimpleNamespace(filled_qty=q, filled_avg_price=50.0, status="filled")
+
+    def ensure_stop(self, e, q, stop):
+        self.stop[e] = (q, stop)
+
+
+def test_alpaca_cycle_long_via_bitu(tmp_path, monkeypatch):
+    monkeypatch.setattr(A, "STATE_FILE", str(tmp_path / "s.json"))
+    monkeypatch.setattr(A.notifier, "send", lambda t: None)
+    now = dt.datetime(2026, 11, 20, 15, tzinfo=dt.timezone.utc)
+    b = FakeAlpaca(candles(breakout="up"), open_=False)
+    s = A.run_once(b, now)                                            # market closed: signal waits
+    assert not s["positions"] and not b.orders
+    b.open_ = True
+    s = A.run_once(b, now)
+    p = s["positions"]["BTC/USD"]
+    assert p["etf"] == "BITU" and p["dir"] == "long" and b.stop["BITU"][1] == pytest.approx(p["stop_etf"])
+    assert p["first_value"] * p["lev"] <= 10 * 550 + 1e-6            # exposure within 10x
+    b.orders.append({"symbol": "BITU", "side": "sell", "qty": b.orders[0]["qty"], "price": 47.0, "time": "2026-11-20T17:00"})
+    s = A.run_once(b, now + dt.timedelta(hours=1))                   # ETF stop filled on Alpaca
+    assert not s["positions"] and s["closed"][-1]["pnl"] < 0

@@ -15,11 +15,15 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r sean_lavarge/requirements.txt
+      - run: pip install -r sean_lavarge/requirements.txt alpaca-py
       - name: Unit tests
         run: python -m pytest -q test_sean_lavarge.py
       - name: Binance Futures testnet connectivity
         run: python -m sean_lavarge.check
         continue-on-error: true
-      - name: Backtest 12 months (EUR 500 + EUR 150/week)
+      - name: Backtest 12 months (EUR 500 + EUR 150/week), max 10x (futures version)
+        run: python -m sean_lavarge.backtest
+      - name: Backtest with max 4x (Alpaca ETF version approximation)
+        env:
+          MAX_LEVERAGE: "4"
         run: python -m sean_lavarge.backtest

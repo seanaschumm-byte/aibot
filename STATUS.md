@@ -1,6 +1,6 @@
-# Bot status: 14-11-2026 16:23 (Dutch time)
+# Bot status: 14-11-2026 17:23 (Dutch time)
 
-Alpaca paper account: equity **$99,994.68**, cash $99,832.05. All bots share this account; below it is split per bot.
+Alpaca paper account: equity **$99,993.47**, cash $99,832.05. All bots share this account; below it is split per bot.
 
 | Bot | Bought | Sold | Holding now | Profit / loss | Buys | Open orders | Last fill |
 |---|---|---|---|---|---|---|---|
@@ -9,7 +9,7 @@ Alpaca paper account: equity **$99,994.68**, cash $99,832.05. All bots share thi
 | Sean Realistisch | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | MACD Nasdaq | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Botsi | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
-| Manual trades | $140.85 | $0.00 | $136.34 | 🔴 $-4.51 (-3.2%) | 5 | 5 | 14-11 10:05 |
+| Manual trades | $140.85 | $0.00 | $135.14 | 🔴 $-5.72 (-4.1%) | 5 | 5 | 14-11 10:05 |
 
 Profit / loss = sold + current value of holdings − bought (after Alpaca's 0.25% crypto fee). Money a bot hasn't spent yet isn't counted.
 
@@ -18,7 +18,7 @@ _EUR 500 + EUR 100/week pot, EUR 25 per dip_ · order label `rsv-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| BTC/USD | 0.000401965 | $65,401.23 | $26.29 |
+| BTC/USD | 0.000401965 | $65,400.00 | $26.29 |
 
 Last fills:
 
@@ -49,11 +49,11 @@ _5 x EUR 25 crypto: sell at +30%, stop-loss at -40%_ · order label `manual25-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| ETH/USD | 0.0148009 | $1,834.98 | $27.16 |
-| SOL/USD | 0.372449 | $74.05 | $27.58 |
-| DOGE/USD | 447.633 | $0.060905 | $27.26 |
-| XRP/USD | 28.4314 | $0.975600 | $27.74 |
-| AVAX/USD | 3.48572 | $7.63 | $26.60 |
+| ETH/USD | 0.0148009 | $1,831.20 | $27.10 |
+| SOL/USD | 0.372449 | $72.96 | $27.17 |
+| DOGE/USD | 447.633 | $0.060580 | $27.12 |
+| XRP/USD | 28.4314 | $0.966420 | $27.48 |
+| AVAX/USD | 3.48572 | $7.54 | $26.26 |
 
 Last fills:
 

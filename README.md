@@ -62,3 +62,45 @@ python bot.py report                      # performance since the start date
 - **Coarse timing.** The bot only checks prices every 5 minutes (sometimes later when GitHub is busy). The stop sits with the broker, so the downside is covered between checks, but targets and the breakeven move only happen on a check.
 - **Paper results aren't real results.** Paper fills are optimistic: no slippage and no queue position.
 - **Real money is different.** With real money at a US broker, an account under $25k may hit the pattern-day-trader limit of 3 day trades per 5 business days. At about €75 a week, fees and spreads would also take a large share of any gains.
+
+---
+
+# BTC risk bot (`crypto_bot.py`)
+
+An aggressive Bitcoin trend bot on the same Alpaca paper account. It runs **every hour, 24/7**, starting 14 Nov 2026.
+
+- **5 trades of €100 each**, one at a time, with all €100 in at once.
+- It **shuts down for good** after 5 trades, or once total profit reaches **+500%** (€2,500 on the €500 stake).
+- Any single trade that reaches +500% is sold immediately.
+- There's **no leverage**: Alpaca crypto is spot only, so a trade gains or loses exactly what BTC does.
+- Its orders carry a `client_order_id` starting with `btcbot-`.
+
+## Strategy (1-hour bars)
+
+1. **Trend:** price above the 200 EMA, and the 20 EMA above the 50 EMA.
+2. **Breakout:** the hourly close is above the highest high of the previous 20 hours.
+3. **Volume:** the breakout bar's volume is at least 1.5× the 20-hour average, and its range is at least 1× ATR.
+4. **Entry:** a €100 market buy.
+5. **Initial stop:** 2× ATR below entry, placed with the broker as a stop-limit order.
+6. **Trailing stop:** the highest close since entry minus 3× ATR. It only moves up. There's no profit target, so a winner can ride a big trend.
+
+## Rules from ten famous high-risk / big-winner traders
+
+These are summaries of their public teaching, not copies of their trades.
+
+| Trader | Known for | Bot rule |
+|---|---|---|
+| Richard Dennis | Turtle Traders: turned a small stake into a reported ~$200M on breakouts | 20-bar breakout entry, 2-ATR stop |
+| Jesse Livermore | Huge bets on big trends, letting winners run | No profit cap: trailing stop only |
+| Stanley Druckenmiller | "Go for the jugular" when conviction is high | Full €100 in at once, no scaling |
+| George Soros | Big concentrated bets, e.g. against the pound in 1992 | One concentrated position, no diversification |
+| Paul Tudor Jones | Uses the 200-day MA as his "metric for everything" | 200 EMA trend filter |
+| Ed Seykota | Trend follower: "cut losses, ride winners" | EMA 20/50 trend + wide trailing stop |
+| Nicolas Darvas | Box breakouts with trailing stops | Breakout from the recent range, stop that only moves up |
+| Larry Williams | Turned $10k into over $1.1M in a year (1987 contest) with volatility breakouts | Range-expansion filter on the breakout bar |
+| Dan Zanger | Record gains from high-volume breakouts | Volume ≥ 1.5× average on the breakout |
+| Kristjan Kullamägi | Grew a small account into tens of millions riding momentum | Let momentum winners run on a trailing stop |
+
+## Honest expectations
+
+Trend-breakout systems typically **lose on most trades** (often 60–70%) and rely on a few big winners. Without leverage, +500% total would need BTC to roughly multiply 6× during the bot's trades, so it's very unlikely. In practice expect a modest gain or loss on the €500.

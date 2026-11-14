@@ -1,0 +1,31 @@
+name: btc-risk-bot
+
+on:
+  schedule:
+    - cron: "7 * * * *"      # every hour, 24/7 (crypto never closes)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "run | report"
+        default: report
+
+concurrency:
+  group: btc-risk-bot
+  cancel-in-progress: false
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Run BTC bot
+        run: python crypto_bot.py ${{ github.event.inputs.mode || 'run' }}
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}

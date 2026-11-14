@@ -190,3 +190,32 @@ After each run, the workflow commits the bot's journal file to the repo: `stocks
 Every Saturday the scheduled Claude review reads the journals and Alpaca's order history. It looks for patterns, such as "dips bought in extreme fear won more often" or "stock trades after 14:00 lost". It then proposes small rule changes, and **nothing changes unless you approve it**.
 
 Automatic tuning only makes sense after about 30 trades per bot. Before that, patterns are mostly luck.
+
+---
+
+# Smart Reserve bot (`reserve_bot.py`)
+
+Opportunistic dip buying from one shared euro pot ("Smart Reserve DCA").
+
+- **Pot:** €500 at the start (14 Nov 2026), plus €100 every Monday. It never buys on a fixed schedule; the money waits for dips. Alpaca has no EUR pairs, so it trades against USD at the live EUR/USD rate.
+- **Coins:** BTC, ETH, SOL, XRP, LINK, AVAX and ADA. It scans all 7 **every 15 minutes**.
+- **Order size:** €25 per buy signal, at most one buy per scan, spot only (no leverage).
+- **Its own coins only:** it keeps its own ledger (`rsv-` orders), so it never sells coins that belong to the other bots.
+
+## Buy rules (all 4 must hold)
+
+| # | Rule | BTC / ETH | Altcoins |
+|---|---|---|---|
+| 1 | Price below the 7-day high | at least −6% | at least −10% |
+| 2 | RSI(14) on 4-hour bars | under 30 | under 27 |
+| 3 | Not in free fall | last 1-hour candle green, **or** price above the 9-period average on 15-minute bars | same |
+| 4 | Spread and cooldown | under the coin's cap (BTC 35%, ETH 25%, others 10% of the pot); no buy of that coin in the last 48 hours; if already held, at least 5% under the previous buy price | same |
+
+If several coins qualify, it buys the one with the **lowest RSI** (most oversold).
+
+## Sell rules
+
+- The take-profit becomes active at **+8%** (BTC/ETH) or **+12%** (altcoins) above the coin's average cost, after fees.
+- A trailing take-profit then follows the peak at **1.5%** (BTC/ETH) or **2.5%** (altcoins). When price drops that far from the peak, **100%** of the coin is sold.
+- All of the money (stake + profit) returns to the pot for the next dip.
+- There's no stop-loss: a coin that keeps falling stays in the portfolio.

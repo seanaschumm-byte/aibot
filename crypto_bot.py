@@ -91,11 +91,15 @@ def ledger(orders: list[dict]) -> dict:
     return {"closed": trades, "open": cur}
 
 
+OWN_QTY: list[float] = []   # BTC that belongs to THIS bot (other bots may hold BTC too)
+
+
 def position_qty() -> float:
+    total = 0.0
     for p in api("GET", "/v2/positions"):
         if p["symbol"] == POS_SYMBOL:
-            return float(p["qty"])
-    return 0.0
+            total = float(p["qty"])
+    return min(total, OWN_QTY[0]) if OWN_QTY else total
 
 
 def open_stops() -> list[dict]:
@@ -178,6 +182,7 @@ def main() -> None:
         a = atr(bars, P.atr_n)
         if led["open"]:
             t = led["open"]
+            OWN_QTY[:] = [t["qty"] * 0.9975]      # bought qty minus Alpaca's 0.25% fee
             gain = price / t["entry"] - 1
             opened = dt.datetime.fromisoformat(t["opened"].replace("Z", "+00:00"))
             since = [b for b in bars
@@ -214,6 +219,7 @@ def main() -> None:
                         if o["status"] == "filled":
                             break
                         time.sleep(1)
+                    OWN_QTY[:] = [float(o.get("filled_qty") or 0) * 0.9975]
                     set_stop(sig["stop"])
         text, _ = summary(ledger(my_orders()), price, fx)
 

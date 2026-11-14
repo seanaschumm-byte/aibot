@@ -23,6 +23,8 @@ jobs:
         run: python -m macd_nasdaq.backtest 8
       - name: Backtest last 24 months
         run: python -m macd_nasdaq.backtest 24
+      - name: Backtest last 60 months (lets the core's +60% / -30% rule show)
+        run: python -m macd_nasdaq.backtest 60
       - name: Botsi (BTC, ETH, SOL) last 8 months
         env: {MARKETS: "BTC,ETH,SOL", TITLE: Botsi}
         run: python -m macd_nasdaq.backtest 8

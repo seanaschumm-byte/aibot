@@ -22,8 +22,8 @@ BOTS = [  # prefix, name, what it does
     ("rsv", "$ Bot 5 - Smart Reserve", "EUR 500 + EUR 100/week pot, EUR 25 per dip"),
     ("sl", "Sean Lavarge", "2x crypto ETFs (BITU/ETHT/SOLZ, SBIT/ETHD), EUR 500 + EUR 150/week"),
     ("sr", "Sean Realistisch", "trend following: SPY/QQQ (2x SSO/QLD), GLD, bonds TLT + IEF; $500 + $300/month"),
-    ("mn", "MACD Nasdaq", "QQQ: MACD crossover + buys 12% dips; sells 50% at +12%, rest at +25% (floor +18%); EUR 500 + EUR 100/week"),
-    ("bs", "Botsi", "MACD Nasdaq rules on BTC/ETH/SOL (1/3 each); EUR 500 + EUR 100/week"),
+    ("mn", "MACD Nasdaq", "QQQ core 60% (buy weekly, sell at +60%, buy back at -30%) + satellite 40% (MACD + 12% dips, 50% at +12%, rest +25%/floor +18%); EUR 500 + EUR 100/week"),
+    ("bs", "Botsi", "plain MACD crossover on BTC/ETH/SOL (1/3 each); EUR 500 + EUR 100/week"),
     ("manual25", "Manual trades", "5 x EUR 25 crypto: sell at +30%, stop-loss at -40%"),
 ]
 

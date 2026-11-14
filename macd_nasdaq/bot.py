@@ -29,8 +29,11 @@ NAME, PREFIX = "MACD Nasdaq", "mn"
 START = dt.date(2026, 11, 16)                 # first Monday
 START_EUR, WEEKLY_EUR = 500.0, 100.0
 MARKETS = {  # tag: (symbol, kind, share of the money, dip look-back in daily bars ~3 months)
-    "QQQ": ("QQQ", "stock", 1.0, 63),
+    "CORE": ("QQQ", "stock", 0.6, 63),   # core: buy every week, sell all at +60%, buy back at -30%
+    "QQQ": ("QQQ", "stock", 0.4, 63),    # satellite: MACD + 12% dips + 12/18/25% profit rules
 }
+CORE_TAKE_PROFIT, CORE_BUY_BACK = 0.60, 0.30
+PLAIN_MACD = False   # True (Botsi): only MACD in/out, no dip buys and no 12/18/25% profit rules
 CRYPTO_FEE = 0.0025
 MIN_ORDER = 10.0                              # Alpaca minimum for crypto orders
 STATE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "state", "state.json")
@@ -157,6 +160,37 @@ def sell(tag: str, lot: dict, qty: float, why: str) -> None:
         notify(f"SELL {tag} {q:.6g} @ {px:,.2f} ({px / lot['entry'] - 1:+.1%} on this buy): {why}")
 
 
+def run_core(s: dict, tag: str, cash: float, today: dt.date) -> None:
+    """Core: buy every week and hold; sell everything at +60% on the average cost; after that,
+    buy back with all core cash once the price is 30% under the highest price since the sale."""
+    st = s[tag]
+    st.setdefault("sold", None)
+    px = price(tag)
+    held = [l for l in st["lots"] if l["qty"] > 0]
+    if st["sold"] is None:
+        avg = sum(l["qty"] * l["entry"] for l in held) / sum(l["qty"] for l in held) if held else 0.0
+        log.info("CORE QQQ %.2f | avg cost %.2f (%+.1f%%, sells at +60%%) | cash $%.2f", px, avg,
+                 (px / avg - 1) * 100 if avg else 0, cash)
+        if held and px >= avg * (1 + CORE_TAKE_PROFIT):
+            for lot in held:
+                sell(tag, lot, lot["qty"], "core +60%: everything sold")
+            st["sold"] = {"price": px, "peak": px, "date": today.isoformat()}
+            notify(f"CORE sold at {px:.2f} (+60%). Buying back when QQQ is 30% under its highest price since today.")
+        elif week_id(today) not in st["deposit_weeks"]:
+            buy(s, tag, cash * 0.99, "core weekly buy", today)
+            st["deposit_weeks"].append(week_id(today))
+    else:
+        st["sold"]["peak"] = max(st["sold"]["peak"], px)
+        trigger = st["sold"]["peak"] * (1 - CORE_BUY_BACK)
+        log.info("CORE in cash since %s: QQQ %.2f, buys back at %.2f (-30%% from %.2f) | cash $%.2f",
+                 st["sold"]["date"], px, trigger, st["sold"]["peak"], cash)
+        if px <= trigger:
+            buy(s, tag, cash * 0.99, f"core buy-back: QQQ 30% under {st['sold']['peak']:.2f}", today)
+            st["sold"] = None
+    st["closed"] += [l for l in st["lots"] if l["qty"] <= 1e-9]
+    st["lots"] = [l for l in st["lots"] if l["qty"] > 1e-9]
+
+
 def run_market(s: dict, tag: str, cash: float, now: dt.datetime) -> None:
     sym, kind, share, lookback = MARKETS[tag]
     st, rules = s[tag], Rules(dip_lookback=lookback)
@@ -169,8 +203,12 @@ def run_market(s: dict, tag: str, cash: float, now: dt.datetime) -> None:
         today = t_et.date()
     else:
         today = now.date()
+    if tag == "CORE":
+        return run_core(s, tag, cash, today)
     closes = daily_closes(tag)
     m, dp = macd_state(closes, rules), in_dip(closes, rules)
+    if PLAIN_MACD:
+        dp = dp & False                                                # no dip buys
     up_now, up_before, dip_now, dip_before = bool(m.iloc[-1]), bool(m.iloc[-2]), bool(dp.iloc[-1]), bool(dp.iloc[-2])
     px = price(tag)
     high = closes.iloc[-lookback:].max()
@@ -178,7 +216,7 @@ def run_market(s: dict, tag: str, cash: float, now: dt.datetime) -> None:
              tag, sym, px, "UP" if up_now else "down", "UP" if up_before else "down",
              (1 - closes.iloc[-1] / high) * 100, " = DIP" if dip_now else "", cash, len(st["lots"]))
 
-    for lot in st["lots"]:                                             # profit rules, every run
+    for lot in ([] if PLAIN_MACD else st["lots"]):                     # profit rules, every run
         lot["peak"] = max(lot["peak"], px)
         act, _ = lot_action(lot["entry"], px, lot["peak"], lot["half"], rules)
         if act == "half":

@@ -51,13 +51,25 @@ def test_bot_day_cycle(tmp_path, monkeypatch):
     monkeypatch.setattr(B, "daily_closes", lambda tag: down_then_up)
     d1 = dt.datetime(2026, 11, 17, 15, 0, tzinfo=dt.timezone.utc)          # 10:00 New York
     s = B.run_once(d1)
-    assert {o[0] for o in orders if o[1] == "buy"} == set(B.MARKETS) == {"QQQ"}
+    assert {o[0] for o in orders if o[1] == "buy"} == set(B.MARKETS) == {"CORE", "QQQ"}   # core + satellite
     assert all(abs(o[2] - 137.5 * 0.99) < 1e-6 for o in orders)
     B.run_once(d1 + dt.timedelta(minutes=30))                              # same day: no second buy
-    assert len([o for o in orders if o[1] == "buy"]) == 1
-    px["v"] = 560.0                                                        # +12%: half sold
-    s = B.run_once(d1 + dt.timedelta(hours=1))
-    assert len([o for o in orders if o[1] == "sell"]) == 1 and s["QQQ"]["lots"][0]["half"]
+    assert len([o for o in orders if o[1] == "buy"]) == 2
+    px["v"] = 560.0                                                        # +12%: satellite sells half,
+    s = B.run_once(d1 + dt.timedelta(hours=1))                             # the core keeps everything
+    sells = [o for o in orders if o[1] == "sell"]
+    assert [o[0] for o in sells] == ["QQQ"] and s["QQQ"]["lots"][0]["half"] and not s["CORE"]["lots"][0].get("half")
+    px["v"] = 805.0                                                        # +61%: core sells everything
+    s = B.run_once(d1 + dt.timedelta(hours=2))
+    assert s["CORE"]["sold"] and not s["CORE"]["lots"]
+    px["v"] = 1000.0                                                       # higher top after the sale
+    B.run_once(d1 + dt.timedelta(hours=3))
+    px["v"] = 705.0                                                        # 29.5% under 1000: not yet
+    s = B.run_once(d1 + dt.timedelta(hours=4))
+    assert s["CORE"]["sold"]
+    px["v"] = 699.0                                                        # 30% under 1000: buy back
+    s = B.run_once(d1 + dt.timedelta(hours=5))
+    assert s["CORE"]["sold"] is None and s["CORE"]["lots"][0]["entry"] == 699.0
 
 
 def test_botsi_uses_its_own_settings(tmp_path, monkeypatch):
@@ -65,7 +77,7 @@ def test_botsi_uses_its_own_settings(tmp_path, monkeypatch):
     import importlib
     import botsi.bot as botsi
     from macd_nasdaq import bot as E
-    assert E.PREFIX == "bs" and set(E.MARKETS) == {"BTC", "ETH", "SOL"} and E.NAME == "Botsi"
+    assert E.PREFIX == "bs" and set(E.MARKETS) == {"BTC", "ETH", "SOL"} and E.NAME == "Botsi" and E.PLAIN_MACD
     assert abs(sum(m[2] for m in E.MARKETS.values()) - 1) < 1e-9
     assert E.STATE_FILE.endswith("botsi/state/state.json")
     monkeypatch.setattr(E, "STATE_FILE", str(tmp_path / "b.json"))
@@ -79,4 +91,19 @@ def test_botsi_uses_its_own_settings(tmp_path, monkeypatch):
     monkeypatch.setattr(E, "eurusd", lambda: 1.1)
     E.run_once(dt.datetime(2026, 11, 22, 3, 0, tzinfo=dt.timezone.utc))   # Sunday night: crypto still trades
     assert {o[0] for o in orders} == {"BTC", "ETH", "SOL"}
+    monkeypatch.setattr(E, "price", lambda tag: 130.0)                     # +30%: plain MACD keeps holding
+    E.run_once(dt.datetime(2026, 11, 22, 3, 30, tzinfo=dt.timezone.utc))
+    assert all(o[1] == "buy" for o in orders)
     importlib.reload(E)                                                   # restore MACD Nasdaq settings
+
+
+def test_core_sells_at_60_and_buys_back_at_minus_30():
+    idx = pd.bdate_range("2025-01-01", periods=400, tz="UTC")
+    flat = [100.0] * 100                                   # most money is invested around 100
+    up = list(np.linspace(100, 250, 100))                  # far above +60% on the average cost
+    down = list(np.linspace(250, 150, 200))                # then -40%: buy back at -30% from the top
+    c = np.array(flat + up + down)
+    df = pd.DataFrame({"open": c, "high": c * 1.001, "low": c * 0.999, "close": c}, index=idx)
+    r = simulate(df, idx[0], "core", Rules(), 300, 60)
+    assert any("sold all" in e for e in r["core_events"])
+    assert any("bought back" in e for e in r["core_events"])

@@ -32,6 +32,14 @@ def diagnose() -> None:
             ex.set_sandbox_mode(True)
         try:
             raw = ex.publicGetInstruments()
+            if isinstance(raw, str):
+                print(f"[{'demo' if sandbox else 'live'}] NON-JSON answer ({len(raw)} chars): {raw[:400]!r}")
+                import requests
+                for url in ("https://demo-futures.kraken.com/derivatives/api/v3/instruments",
+                            "https://demo-futures.kraken.com/derivatives/api/v3/tickers"):
+                    r = requests.get(url, timeout=15)
+                    print(f"   GET {url} -> {r.status_code} {r.headers.get('content-type')} {r.text[:200]!r}")
+                continue
             inst = raw.get("instruments", [])
             pf = [i for i in inst if str(i.get("symbol", "")).upper().startswith("PF_")]
             print(f"[{'demo' if sandbox else 'live'}] raw instruments: {len(inst)}, PF_*: {len(pf)}, "

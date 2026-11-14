@@ -1,15 +1,15 @@
-# Bot status: 14-11-2026 19:21 (Dutch time)
+# Bot status: 14-11-2026 20:29 (Dutch time)
 
-Alpaca paper account: equity **$99,993.17**, cash $99,777.90. All bots share this account; below it is split per bot.
+Alpaca paper account: equity **$99,992.07**, cash $99,777.90. All bots share this account; below it is split per bot.
 
 | Bot | Bought | Sold | Holding now | Profit / loss | Buys | Open orders | Last fill |
 |---|---|---|---|---|---|---|---|
-| $ Bot 5 - Smart Reserve | $81.26 | $0.00 | $80.65 | 🔴 $-0.61 (-0.7%) | 3 | 0 | 14-11 18:47 |
+| $ Bot 5 - Smart Reserve | $81.26 | $0.00 | $80.21 | 🔴 $-1.05 (-1.3%) | 3 | 0 | 14-11 18:47 |
 | Sean Lavarge | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Sean Realistisch | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | MACD Nasdaq | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Botsi | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
-| Manual trades | $140.85 | $0.00 | $134.62 | 🔴 $-6.23 (-4.4%) | 5 | 5 | 14-11 10:05 |
+| Manual trades | $140.85 | $0.00 | $133.96 | 🔴 $-6.89 (-4.9%) | 5 | 5 | 14-11 10:05 |
 
 Profit / loss = sold + current value of holdings − bought (after Alpaca's 0.25% crypto fee). Money a bot hasn't spent yet isn't counted.
 
@@ -18,9 +18,9 @@ _EUR 500 + EUR 100/week pot, EUR 25 per dip_ · order label `rsv-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| BTC/USD | 0.000401965 | $65,753.38 | $26.43 |
-| ADA/USD | 174.413 | $0.156630 | $27.32 |
-| SOL/USD | 0.370439 | $72.63 | $26.91 |
+| BTC/USD | 0.000401965 | $65,544.44 | $26.35 |
+| ADA/USD | 174.413 | $0.153500 | $26.77 |
+| SOL/USD | 0.370439 | $73.14 | $27.09 |
 
 Last fills:
 
@@ -53,11 +53,11 @@ _5 x EUR 25 crypto: sell at +30%, stop-loss at -40%_ · order label `manual25-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| ETH/USD | 0.0148009 | $1,833.73 | $27.14 |
-| SOL/USD | 0.372449 | $72.63 | $27.05 |
+| ETH/USD | 0.0148009 | $1,823.57 | $26.99 |
+| SOL/USD | 0.372449 | $73.14 | $27.24 |
 | DOGE/USD | 447.633 | $0.060190 | $26.94 |
-| XRP/USD | 28.4314 | $0.958500 | $27.25 |
-| AVAX/USD | 3.48572 | $7.53 | $26.23 |
+| XRP/USD | 28.4314 | $0.949051 | $26.98 |
+| AVAX/USD | 3.48572 | $7.40 | $25.80 |
 
 Last fills:
 

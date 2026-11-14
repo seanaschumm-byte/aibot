@@ -1,0 +1,23 @@
+name: "Compare known strategies - last 8 months"
+
+on:
+  push:
+    paths: ["compare_strategies.py", ".github/workflows/compare_strategies.yml"]
+  workflow_dispatch:
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install requests pandas numpy
+      - name: Replay 14 known strategies on the last 8 months
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python compare_strategies.py

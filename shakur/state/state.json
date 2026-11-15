@@ -1,0 +1,38 @@
+{
+ "BOLL": {
+  "positions": {},
+  "closed": [],
+  "last_day": null,
+  "topped_up": []
+ },
+ "TURTLE": {
+  "positions": {},
+  "closed": [],
+  "last_day": "2026-11-15",
+  "topped_up": []
+ },
+ "CONN_SPY": {
+  "positions": {},
+  "closed": [],
+  "last_day": null,
+  "topped_up": []
+ },
+ "CONN_CRYPTO": {
+  "positions": {},
+  "closed": [],
+  "last_day": "2026-11-15",
+  "topped_up": []
+ },
+ "DIP8": {
+  "positions": {},
+  "closed": [],
+  "last_day": null,
+  "topped_up": []
+ },
+ "FABER": {
+  "positions": {},
+  "closed": [],
+  "last_day": null,
+  "topped_up": []
+ }
+}

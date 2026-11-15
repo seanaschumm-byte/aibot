@@ -1,0 +1,23 @@
+name: "AI trading bot Shakur - backtest"
+
+on:
+  push:
+    paths: ["shakur/**.py", "justin/**.py", ".github/workflows/shakur_test.yml"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy pytest
+      - run: python -m pytest -q test_shakur.py test_justin.py
+      - name: Backtest 6, 12 and 24 months
+        run: python -m shakur.backtest

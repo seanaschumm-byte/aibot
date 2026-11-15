@@ -30,6 +30,8 @@ def indicators(df: pd.DataFrame) -> pd.DataFrame:
     df["ibs"] = ((c - df["low"]) / rng).fillna(0.5)                     # internal bar strength
     df["prev_high"] = df["high"].shift(1)
     df["down3"] = (d < 0) & (d.shift(1) < 0) & (d.shift(2) < 0)
+    df["high20_prev"] = df["high"].rolling(20).max().shift(1)          # Turtle: breakout over the PREVIOUS 20 days
+    df["low10_prev"] = df["low"].rolling(10).min().shift(1)
     return df
 
 
@@ -67,3 +69,16 @@ STRATEGIES = {
         "exit": lambda r, p: r["rsi2"] > 70 or p["days"] >= 15,
         "rank": lambda r: r["rsi2"]},
 }
+
+# Trend strategies (used by Shakur). Not dip strategies, so not in Justin's dip test.
+TREND_STRATEGIES = {
+    "Turtle breakout": {                      # Richard Dennis: buy a 20-day high, sell a 10-day low
+        "entry": lambda r: not pd.isna(r["high20_prev"]) and r["close"] > r["high20_prev"],
+        "exit": lambda r, p: r["close"] < r["low10_prev"],
+        "rank": lambda r: -r["close"] / r["high20_prev"]},
+    "Faber 200-day trend": {                  # Meb Faber: hold while above the 200-day average, else cash
+        "entry": lambda r: up(r),
+        "exit": lambda r, p: not up(r),
+        "rank": lambda r: 0.0},
+}
+ALL_STRATEGIES = {**STRATEGIES, **TREND_STRATEGIES}

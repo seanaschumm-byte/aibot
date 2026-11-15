@@ -25,6 +25,7 @@ BOTS = [  # prefix, name, what it does
     ("mn", "MACD Nasdaq", "QQQ core 60% (buy weekly, never sell) + satellite 40% (MACD + 12% dips, 50% at +12%, rest +25%/floor +18%); EUR 500 + EUR 100/week"),
     ("bs", "Botsi", "plain MACD crossover on BTC/ETH/SOL (1/3 each); EUR 500 + EUR 100/week"),
     ("js", "Justin", "Bollinger Band bounce on 15 US stocks/ETFs, max 5 positions; EUR 500 + EUR 100/week"),
+    ("sk", "AI trading bot Shakur", "6 strategies from the 6-month top 10 (Bollinger, Turtle BTC, Connors SPY + crypto, 8% dip, Faber SPY), 1/6 each; EUR 500 + EUR 100/week"),
     ("manual25", "Manual trades", "5 x EUR 25 crypto: sell at +30%, stop-loss at -40%"),
 ]
 

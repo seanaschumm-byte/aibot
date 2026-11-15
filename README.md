@@ -15,6 +15,8 @@ The top 3 of the 6-month replay (16 May – 14 Nov 2026, `compare_6m.py`). All o
 
 | **Justin** ([`justin/`](justin/bot.py)) | Best of 21 known strategies over the last 6 months: **Bollinger Band bounce**. Buys a stock that closes under its lower Bollinger Band (20 days, 2σ), sells when it is back at the 20-day average (or after 30 days). 15 liquid US stocks/ETFs, max 5 positions. €500 + €100/week. Weekly report every Saturday. | 6-month test: +€145 (+8.0%), max drawdown −6.3%, 68% winners | `js-` |
 
+| **AI trading bot Shakur** ([`shakur/`](shakur/config.py)) | The 6 distinct strategies from the top 10 of the 6-month test, each with 1/6 of the money: Bollinger bounce (15 stocks), Turtle breakout (BTC), Connors RSI(2) (SPY and crypto), 8% dip / +8% (15 stocks), Faber 200-day (SPY). €500 + €100/week. | see `shakur/backtest.py` | `sk-` |
+
 Also in the account: **5 manual crypto trades** (`manual25-`) with a +30% take-profit and a −40% stop-loss guard (`manual_guard.py`, every 15 min).
 
 Removed on 14 Nov 2026: Bots 1–4 (stocks VWAP dip, BTC risk, crypto daily dip, weekly dip) and Market Making. They are still in the git history.

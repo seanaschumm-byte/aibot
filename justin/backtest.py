@@ -12,7 +12,7 @@ import sys
 import pandas as pd
 import requests
 
-from .strategies import STRATEGIES, indicators
+from .strategies import ALL_STRATEGIES, STRATEGIES, indicators
 
 EURUSD = 1.10
 H = {"APCA-API-KEY-ID": os.getenv("ALPACA_API_KEY", "proxy-injected"),
@@ -46,19 +46,21 @@ def load(symbols: list[str], months: float) -> dict[str, pd.DataFrame]:
     return out
 
 
-def simulate(data: dict[str, pd.DataFrame], name: str, start: pd.Timestamp, max_pos: int, fee: float) -> dict:
+def simulate(data: dict[str, pd.DataFrame], name: str, start: pd.Timestamp, max_pos: int, fee: float,
+             start_eur: float = 500.0, weekly_eur: float = 100.0, add_deposits: bool = False) -> dict:
+    """add_deposits: new weekly money is added to an open position (for single-asset trend sleeves)."""
     days = sorted(t for t in set().union(*[set(d.index) for d in data.values()]) if t >= start)
     slip = 0.0005 + fee
-    cash, deposited, pos, curve, trades, week = 500 * EURUSD, 500.0, {}, [], [], None
+    cash, deposited, pos, curve, trades, week = start_eur * EURUSD, start_eur, {}, [], [], None
     pend_exit: list[str] = []
     pend_entry: list[str] = []
-    strat = STRATEGIES.get(name)
+    strat = ALL_STRATEGIES.get(name)
     for i, t in enumerate(days):
         dep = 0.0
         if i > 0 and t.isocalendar()[:2] != week:
-            dep = 100 * EURUSD
+            dep = weekly_eur * EURUSD
             cash += dep
-            deposited += 100
+            deposited += weekly_eur
         week = t.isocalendar()[:2]
         bar = {s: d.loc[t] for s, d in data.items() if t in d.index}
         # orders at the open
@@ -87,6 +89,14 @@ def simulate(data: dict[str, pd.DataFrame], name: str, start: pd.Timestamp, max_
                 px = bar[s]["open"] * (1 + slip)
                 cash -= usd
                 pos[s] = {"qty": usd / px, "entry": px, "days": 0}
+            if add_deposits and dep and pos and cash >= 1:     # top up the open position(s)
+                each = cash / len(pos)
+                for s, p in pos.items():
+                    if s in bar:
+                        px = bar[s]["open"] * (1 + slip)
+                        p["entry"] = (p["entry"] * p["qty"] + each) / (p["qty"] + each / px)
+                        p["qty"] += each / px
+                        cash -= each
         pend_exit, pend_entry = [], []
         equity = cash + sum(p["qty"] * bar[s]["close"] for s, p in pos.items() if s in bar)
         curve.append((t, equity, dep))
@@ -109,7 +119,8 @@ def simulate(data: dict[str, pd.DataFrame], name: str, start: pd.Timestamp, max_
             "dd": float((twr / twr.cummax() - 1).min()), "trades": len(trades),
             "win": sum(x > 0 for x in trades) / len(trades) if trades else 0.0,
             "avg": sum(trades) / len(trades) if trades else 0.0,
-            "sharpe": float(r.mean() / r.std() * math.sqrt(252)) if r.std() else 0.0}
+            "sharpe": float(r.mean() / r.std() * math.sqrt(252)) if r.std() else 0.0, "curve": curve,
+            "trade_results": trades}
 
 
 def run(group: str, symbols: list[str], months: float, max_pos: int, fee: float) -> list[dict]:

@@ -1,0 +1,26 @@
+name: "Justin - pick the best strategy (6 months)"
+
+on:
+  push:
+    paths: ["justin/**.py", "compare_strategies.py", ".github/workflows/justin_test.yml"]
+  workflow_dispatch:
+
+jobs:
+  pick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+      ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pandas numpy
+      - name: Buy-the-dip strategies, last 6 months
+        run: python -m justin.backtest 6
+      - name: 14 known strategies, last 6 months
+        env:
+          MONTHS: "6"
+        run: python compare_strategies.py

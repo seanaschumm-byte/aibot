@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-EURUSD, MONTHS = 1.10, 8
+EURUSD, MONTHS = 1.10, float(os.getenv("MONTHS", "8"))
 START_EUR, WEEKLY_EUR = 500.0, 100.0
 DATA = "https://data.alpaca.markets"
 H = {"APCA-API-KEY-ID": os.getenv("ALPACA_API_KEY", "proxy-injected"),

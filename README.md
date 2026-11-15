@@ -13,6 +13,8 @@ The top 3 of the 6-month replay (16 May – 14 Nov 2026, `compare_6m.py`). All o
 | **MACD Nasdaq** ([`macd_nasdaq/`](macd_nasdaq/strategy.py)) | QQQ, **core + satellite**. Core (60%): buys QQQ every week and **never sells**, also not in a drop. Satellite (40%): MACD(12,26,9) in/out + buys 12% dips; each buy sells 50% at +12%, the rest at +25% (or +18% if it falls back). €500 + €100/week. | added 14 Nov 2026 | `mn-` |
 | **Botsi** ([`botsi/`](botsi/bot.py)) | Plain MACD crossover on **BTC, ETH and SOL**, 24/7, one third each: in when MACD is up, out when it turns down. €500 + €100/week. | added 14 Nov 2026 | `bs-` |
 
+| **Justin** ([`justin/`](justin/bot.py)) | Best of 21 known strategies over the last 6 months: **Bollinger Band bounce**. Buys a stock that closes under its lower Bollinger Band (20 days, 2σ), sells when it is back at the 20-day average (or after 30 days). 15 liquid US stocks/ETFs, max 5 positions. €500 + €100/week. Weekly report every Saturday. | 6-month test: +€145 (+8.0%), max drawdown −6.3%, 68% winners | `js-` |
+
 Also in the account: **5 manual crypto trades** (`manual25-`) with a +30% take-profit and a −40% stop-loss guard (`manual_guard.py`, every 15 min).
 
 Removed on 14 Nov 2026: Bots 1–4 (stocks VWAP dip, BTC risk, crypto daily dip, weekly dip) and Market Making. They are still in the git history.

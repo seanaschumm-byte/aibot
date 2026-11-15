@@ -1,15 +1,15 @@
-# Bot status: 15-11-2026 15:30 (Dutch time)
+# Bot status: 15-11-2026 16:25 (Dutch time)
 
-Alpaca paper account: equity **$99,993.69**, cash $99,669.53. All bots share this account; below it is split per bot.
+Alpaca paper account: equity **$99,991.38**, cash $99,669.53. All bots share this account; below it is split per bot.
 
 | Bot | Bought | Sold | Holding now | Profit / loss | Buys | Open orders | Last fill |
 |---|---|---|---|---|---|---|---|
-| $ Bot 5 - Smart Reserve | $189.63 | $0.00 | $191.50 | 🟢 $+1.87 (+1.0%) | 7 | 0 | 15-11 01:19 |
+| $ Bot 5 - Smart Reserve | $189.63 | $0.00 | $190.24 | 🟢 $+0.61 (+0.3%) | 7 | 0 | 15-11 01:19 |
 | Sean Lavarge | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Sean Realistisch | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | MACD Nasdaq | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
 | Botsi | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
-| Manual trades | $140.85 | $0.00 | $132.65 | 🔴 $-8.20 (-5.8%) | 5 | 5 | 14-11 10:05 |
+| Manual trades | $140.85 | $0.00 | $131.61 | 🔴 $-9.24 (-6.6%) | 5 | 5 | 14-11 10:05 |
 
 Profit / loss = sold + current value of holdings − bought (after Alpaca's 0.25% crypto fee). Money a bot hasn't spent yet isn't counted.
 
@@ -18,13 +18,13 @@ _EUR 500 + EUR 100/week pot, EUR 25 per dip_ · order label `rsv-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| BTC/USD | 0.000401965 | $64,972.93 | $26.12 |
+| BTC/USD | 0.000401965 | $64,652.43 | $25.99 |
 | ADA/USD | 174.413 | $0.154990 | $27.03 |
-| SOL/USD | 0.370439 | $71.61 | $26.53 |
-| ETH/USD | 0.0147431 | $1,818.40 | $26.81 |
-| LINK/USD | 3.10509 | $9.35 | $29.03 |
-| XRP/USD | 29.7944 | $0.962592 | $28.68 |
-| AVAX/USD | 3.78174 | $7.22 | $27.31 |
+| SOL/USD | 0.370439 | $71.11 | $26.34 |
+| ETH/USD | 0.0147431 | $1,806.76 | $26.64 |
+| LINK/USD | 3.10509 | $9.18 | $28.50 |
+| XRP/USD | 29.7944 | $0.958200 | $28.55 |
+| AVAX/USD | 3.78174 | $7.19 | $27.19 |
 
 Last fills:
 
@@ -59,11 +59,11 @@ _5 x EUR 25 crypto: sell at +30%, stop-loss at -40%_ · order label `manual25-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| ETH/USD | 0.0148009 | $1,818.40 | $26.91 |
-| SOL/USD | 0.372449 | $71.61 | $26.67 |
-| DOGE/USD | 447.633 | $0.059265 | $26.53 |
-| XRP/USD | 28.4314 | $0.962592 | $27.37 |
-| AVAX/USD | 3.48572 | $7.22 | $25.17 |
+| ETH/USD | 0.0148009 | $1,806.76 | $26.74 |
+| SOL/USD | 0.372449 | $71.11 | $26.48 |
+| DOGE/USD | 447.633 | $0.058260 | $26.08 |
+| XRP/USD | 28.4314 | $0.958200 | $27.24 |
+| AVAX/USD | 3.48572 | $7.19 | $25.06 |
 
 Last fills:
 

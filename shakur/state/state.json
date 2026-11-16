@@ -2,7 +2,7 @@
  "BOLL": {
   "positions": {},
   "closed": [],
-  "last_day": null,
+  "last_day": "2026-11-16",
   "topped_up": []
  },
  "TURTLE": {
@@ -14,7 +14,7 @@
  "CONN_SPY": {
   "positions": {},
   "closed": [],
-  "last_day": null,
+  "last_day": "2026-11-16",
   "topped_up": []
  },
  "CONN_CRYPTO": {
@@ -24,15 +24,27 @@
   "topped_up": []
  },
  "DIP8": {
-  "positions": {},
+  "positions": {
+   "META": {
+    "entry": 626.584,
+    "days": 0,
+    "opened": "2026-11-16"
+   }
+  },
   "closed": [],
-  "last_day": null,
+  "last_day": "2026-11-16",
   "topped_up": []
  },
  "FABER": {
-  "positions": {},
+  "positions": {
+   "SPY": {
+    "entry": 744.764,
+    "days": 0,
+    "opened": "2026-11-16"
+   }
+  },
   "closed": [],
-  "last_day": null,
+  "last_day": "2026-11-16",
   "topped_up": []
  }
 }

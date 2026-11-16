@@ -1,0 +1,26 @@
+{
+ "CORE": {
+  "lots": [
+   {
+    "qty": 0.489911516,
+    "entry": 667.692,
+    "peak": 667.692,
+    "half": false,
+    "opened": "2026-11-16",
+    "why": "core weekly buy"
+   }
+  ],
+  "closed": [],
+  "signal_day": null,
+  "deposit_weeks": [
+   "2026W47"
+  ],
+  "sold": null
+ },
+ "QQQ": {
+  "lots": [],
+  "closed": [],
+  "signal_day": "2026-11-16",
+  "deposit_weeks": []
+ }
+}

@@ -18,9 +18,20 @@
   "sold": null
  },
  "QQQ": {
-  "lots": [],
+  "lots": [
+   {
+    "qty": 0.329589113,
+    "entry": 661.642,
+    "peak": 661.642,
+    "half": false,
+    "opened": "2026-11-17",
+    "why": "12% dip under the 3-month high"
+   }
+  ],
   "closed": [],
-  "signal_day": "2026-11-16",
-  "deposit_weeks": []
+  "signal_day": "2026-11-17",
+  "deposit_weeks": [
+   "2026W47"
+  ]
  }
 }

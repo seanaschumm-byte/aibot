@@ -1,2 +1,3 @@
 {"time": "2026-11-16T15:42:46+00:00", "event": "entry", "cid": "DIP8-META-2026-11-16", "sleeve": "DIP8", "symbol": "META", "price": 626.584, "usd": 18.17}
 {"time": "2026-11-16T15:42:46+00:00", "event": "entry", "cid": "FABER-SPY-2026-11-16", "sleeve": "FABER", "symbol": "SPY", "price": 744.764, "usd": 90.87}
+{"time": "2026-11-17T15:09:25+00:00", "event": "entry", "cid": "DIP8-XLE-2026-11-17", "sleeve": "DIP8", "symbol": "XLE", "price": 64.138, "usd": 18.13}

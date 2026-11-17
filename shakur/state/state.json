@@ -2,7 +2,7 @@
  "BOLL": {
   "positions": {},
   "closed": [],
-  "last_day": "2026-11-16",
+  "last_day": "2026-11-17",
   "topped_up": []
  },
  "TURTLE": {
@@ -27,24 +27,29 @@
   "positions": {
    "META": {
     "entry": 626.584,
-    "days": 0,
+    "days": 1,
     "opened": "2026-11-16"
+   },
+   "XLE": {
+    "entry": 64.138,
+    "days": 0,
+    "opened": "2026-11-17"
    }
   },
   "closed": [],
-  "last_day": "2026-11-16",
+  "last_day": "2026-11-17",
   "topped_up": []
  },
  "FABER": {
   "positions": {
    "SPY": {
     "entry": 744.764,
-    "days": 0,
+    "days": 1,
     "opened": "2026-11-16"
    }
   },
   "closed": [],
-  "last_day": "2026-11-16",
+  "last_day": "2026-11-17",
   "topped_up": []
  }
 }

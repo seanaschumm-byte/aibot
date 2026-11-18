@@ -1,5 +1,16 @@
 {
- "positions": {},
+ "positions": {
+  "DIA": {
+   "entry": 504.486,
+   "days": 0,
+   "opened": "2026-11-18"
+  },
+  "IWM": {
+   "entry": 270.826,
+   "days": 0,
+   "opened": "2026-11-18"
+  }
+ },
  "closed": [],
- "last_day": "2026-11-17"
+ "last_day": "2026-11-18"
 }

@@ -1,3 +1,6 @@
 {"time": "2026-11-16T15:42:46+00:00", "event": "entry", "cid": "DIP8-META-2026-11-16", "sleeve": "DIP8", "symbol": "META", "price": 626.584, "usd": 18.17}
 {"time": "2026-11-16T15:42:46+00:00", "event": "entry", "cid": "FABER-SPY-2026-11-16", "sleeve": "FABER", "symbol": "SPY", "price": 744.764, "usd": 90.87}
 {"time": "2026-11-17T15:09:25+00:00", "event": "entry", "cid": "DIP8-XLE-2026-11-17", "sleeve": "DIP8", "symbol": "XLE", "price": 64.138, "usd": 18.13}
+{"time": "2026-11-18T15:14:49+00:00", "event": "entry", "cid": "BOLL-DIA-2026-11-18", "sleeve": "BOLL", "symbol": "DIA", "price": 503.102, "usd": 18.1}
+{"time": "2026-11-18T15:14:49+00:00", "event": "entry", "cid": "BOLL-IWM-2026-11-18", "sleeve": "BOLL", "symbol": "IWM", "price": 270.836, "usd": 18.1}
+{"time": "2026-11-18T15:14:49+00:00", "event": "entry", "cid": "DIP8-MSFT-2026-11-18", "sleeve": "DIP8", "symbol": "MSFT", "price": 507.358, "usd": 18.01}

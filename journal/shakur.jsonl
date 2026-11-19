@@ -6,3 +6,4 @@
 {"time": "2026-11-18T15:14:49+00:00", "event": "entry", "cid": "DIP8-MSFT-2026-11-18", "sleeve": "DIP8", "symbol": "MSFT", "price": 507.358, "usd": 18.01}
 {"time": "2026-11-19T15:15:22+00:00", "event": "entry", "cid": "BOLL-GLD-2026-11-19", "sleeve": "BOLL", "symbol": "GLD", "price": 339.026, "usd": 18.12}
 {"time": "2026-11-19T15:15:22+00:00", "event": "entry", "cid": "BOLL-JPM-2026-11-19", "sleeve": "BOLL", "symbol": "JPM", "price": 324.288, "usd": 18.12}
+{"time": "2026-11-19T20:38:15+00:00", "event": "entry", "cid": "CONN_SPY-SPY-2026-11-19", "sleeve": "CONN_SPY", "symbol": "SPY", "price": 717.254, "usd": 90.68}

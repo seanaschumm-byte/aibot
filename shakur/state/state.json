@@ -33,9 +33,15 @@
   "topped_up": []
  },
  "CONN_SPY": {
-  "positions": {},
+  "positions": {
+   "SPY": {
+    "entry": 717.254,
+    "days": 0,
+    "opened": "2026-11-19"
+   }
+  },
   "closed": [],
-  "last_day": "2026-11-16",
+  "last_day": "2026-11-19",
   "topped_up": []
  },
  "CONN_CRYPTO": {

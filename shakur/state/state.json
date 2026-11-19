@@ -3,17 +3,27 @@
   "positions": {
    "DIA": {
     "entry": 503.102,
-    "days": 0,
+    "days": 1,
     "opened": "2026-11-18"
    },
    "IWM": {
     "entry": 270.836,
-    "days": 0,
+    "days": 1,
     "opened": "2026-11-18"
+   },
+   "GLD": {
+    "entry": 339.026,
+    "days": 0,
+    "opened": "2026-11-19"
+   },
+   "JPM": {
+    "entry": 324.288,
+    "days": 0,
+    "opened": "2026-11-19"
    }
   },
   "closed": [],
-  "last_day": "2026-11-18",
+  "last_day": "2026-11-19",
   "topped_up": []
  },
  "TURTLE": {
@@ -38,34 +48,34 @@
   "positions": {
    "META": {
     "entry": 626.584,
-    "days": 2,
+    "days": 3,
     "opened": "2026-11-16"
    },
    "XLE": {
     "entry": 64.138,
-    "days": 1,
+    "days": 2,
     "opened": "2026-11-17"
    },
    "MSFT": {
     "entry": 507.358,
-    "days": 0,
+    "days": 1,
     "opened": "2026-11-18"
    }
   },
   "closed": [],
-  "last_day": "2026-11-18",
+  "last_day": "2026-11-19",
   "topped_up": []
  },
  "FABER": {
   "positions": {
    "SPY": {
     "entry": 744.764,
-    "days": 2,
+    "days": 3,
     "opened": "2026-11-16"
    }
   },
   "closed": [],
-  "last_day": "2026-11-18",
+  "last_day": "2026-11-19",
   "topped_up": []
  }
 }

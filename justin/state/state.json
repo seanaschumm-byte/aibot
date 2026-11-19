@@ -2,15 +2,25 @@
  "positions": {
   "DIA": {
    "entry": 504.486,
-   "days": 0,
+   "days": 1,
    "opened": "2026-11-18"
   },
   "IWM": {
    "entry": 270.826,
-   "days": 0,
+   "days": 1,
    "opened": "2026-11-18"
+  },
+  "GLD": {
+   "entry": 339.266,
+   "days": 0,
+   "opened": "2026-11-19"
+  },
+  "JPM": {
+   "entry": 327.102,
+   "days": 0,
+   "opened": "2026-11-19"
   }
  },
  "closed": [],
- "last_day": "2026-11-18"
+ "last_day": "2026-11-19"
 }

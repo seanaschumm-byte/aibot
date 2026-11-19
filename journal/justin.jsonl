@@ -1,2 +1,4 @@
 {"time": "2026-11-18T14:58:48+00:00", "event": "entry", "cid": "DIA-2026-11-18", "symbol": "DIA", "price": 504.486, "usd": 108.79, "close": 507.37, "lower_band": 509.3755722435626, "middle_band": 521.1045}
 {"time": "2026-11-18T14:58:48+00:00", "event": "entry", "cid": "IWM-2026-11-18", "symbol": "IWM", "price": 270.826, "usd": 108.79, "close": 268.96, "lower_band": 269.75330497568115, "middle_band": 278.11475}
+{"time": "2026-11-19T14:58:43+00:00", "event": "entry", "cid": "GLD-2026-11-19", "symbol": "GLD", "price": 339.266, "usd": 108.41, "close": 341.22, "lower_band": 344.8251042640636, "middle_band": 364.31100000000004}
+{"time": "2026-11-19T14:58:44+00:00", "event": "entry", "cid": "JPM-2026-11-19", "symbol": "JPM", "price": 327.102, "usd": 108.41, "close": 324.13, "lower_band": 326.1020600061091, "middle_band": 338.467}

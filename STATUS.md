@@ -1,17 +1,17 @@
-# Bot status: 20-11-2026 23:30 (Dutch time)
+# Bot status: 21-11-2026 00:30 (Dutch time)
 
-Alpaca paper account: equity **$99,876.48**, cash $97,522.44. All bots share this account; below it is split per bot.
+Alpaca paper account: equity **$99,887.77**, cash $97,522.44. All bots share this account; below it is split per bot.
 
 | Bot | Bought | Sold | Holding now | Profit / loss | Buys | Open orders | Last fill |
 |---|---|---|---|---|---|---|---|
-| $ Bot 5 - Smart Reserve | $297.35 | $0.00 | $285.47 | 🔴 $-11.88 (-4.0%) | 11 | 0 | 20-11 22:02 |
-| Sean Lavarge | $213.90 | $0.00 | $225.90 | 🟢 $+12.00 (+5.6%) | 2 | 0 | 20-11 17:57 |
-| Sean Realistisch | $597.87 | $97.88 | $472.34 | 🔴 $-27.65 (-4.6%) | 4 | 0 | 19-11 21:45 |
-| MACD Nasdaq | $545.18 | $0.00 | $504.61 | 🔴 $-40.57 (-7.4%) | 2 | 0 | 17-11 15:48 |
+| $ Bot 5 - Smart Reserve | $297.35 | $0.00 | $285.23 | 🔴 $-12.12 (-4.1%) | 11 | 0 | 20-11 22:02 |
+| Sean Lavarge | $213.90 | $0.00 | $232.56 | 🟢 $+18.66 (+8.7%) | 2 | 0 | 20-11 17:57 |
+| Sean Realistisch | $597.87 | $97.88 | $474.65 | 🔴 $-25.34 (-4.2%) | 4 | 0 | 19-11 21:45 |
+| MACD Nasdaq | $545.18 | $0.00 | $507.48 | 🔴 $-37.70 (-6.9%) | 2 | 0 | 17-11 15:48 |
 | Botsi | $0.00 | $0.00 | $0.00 | ⚪ $+0.00 | 0 | 0 | - |
-| Justin | $541.33 | $0.00 | $518.20 | 🔴 $-23.13 (-4.3%) | 5 | 0 | 20-11 15:57 |
-| AI trading bot Shakur | $326.07 | $87.16 | $225.27 | 🔴 $-13.64 (-4.2%) | 10 | 0 | 20-11 16:14 |
-| Manual trades | $140.85 | $0.00 | $122.26 | 🔴 $-18.59 (-13.2%) | 5 | 5 | 14-11 10:05 |
+| Justin | $541.33 | $0.00 | $517.55 | 🔴 $-23.78 (-4.4%) | 5 | 0 | 20-11 15:57 |
+| AI trading bot Shakur | $326.07 | $87.16 | $225.70 | 🔴 $-13.21 (-4.1%) | 10 | 0 | 20-11 16:14 |
+| Manual trades | $140.85 | $0.00 | $122.17 | 🔴 $-18.68 (-13.3%) | 5 | 5 | 14-11 10:05 |
 
 Profit / loss = sold + current value of holdings − bought (after Alpaca's 0.25% crypto fee). Money a bot hasn't spent yet isn't counted.
 
@@ -20,13 +20,13 @@ _EUR 500 + EUR 100/week pot, EUR 25 per dip_ · order label `rsv-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| BTC/USD | 0.000861666 | $59,018.98 | $50.85 |
+| BTC/USD | 0.000861666 | $58,866.26 | $50.72 |
 | ADA/USD | 365.727 | $0.143839 | $52.61 |
-| SOL/USD | 0.370439 | $68.81 | $25.49 |
-| ETH/USD | 0.0312328 | $1,619.76 | $50.59 |
-| LINK/USD | 3.10509 | $8.55 | $26.56 |
-| XRP/USD | 29.7944 | $0.914760 | $27.25 |
-| AVAX/USD | 7.91181 | $6.59 | $52.11 |
+| SOL/USD | 0.370439 | $69.06 | $25.58 |
+| ETH/USD | 0.0312328 | $1,618.10 | $50.54 |
+| LINK/USD | 3.10509 | $8.60 | $26.70 |
+| XRP/USD | 29.7944 | $0.912701 | $27.19 |
+| AVAX/USD | 7.91181 | $6.56 | $51.89 |
 
 Last fills:
 
@@ -41,7 +41,7 @@ _2x crypto ETFs (BITU/ETHT/SOLZ, SBIT/ETHD), EUR 500 + EUR 150/week_ · order la
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| SBIT | 3.91848 | $57.65 | $225.90 |
+| SBIT | 3.91848 | $59.35 | $232.56 |
 
 Last fills:
 
@@ -53,7 +53,7 @@ _trend following: SPY/QQQ (2x SSO/QLD), GLD, bonds TLT + IEF; $500 + $300/month_
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| SPY | 0.680015 | $694.60 | $472.34 |
+| SPY | 0.680015 | $698.00 | $474.65 |
 
 Last fills:
 
@@ -68,7 +68,7 @@ _QQQ core 60% (buy weekly, never sell) + satellite 40% (MACD + 12% dips, 50% at 
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| QQQ | 0.819501 | $615.75 | $504.61 |
+| QQQ | 0.819501 | $619.25 | $507.48 |
 
 Last fills:
 
@@ -85,11 +85,11 @@ _Bollinger Band bounce on 15 US stocks/ETFs, max 5 positions; EUR 500 + EUR 100/
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| DIA | 0.215625 | $483.11 | $104.17 |
-| IWM | 0.40166 | $258.06 | $103.65 |
-| GLD | 0.319513 | $324.03 | $103.53 |
-| JPM | 0.331395 | $311.27 | $103.15 |
-| SPY | 0.149279 | $694.60 | $103.69 |
+| DIA | 0.215625 | $481.08 | $103.73 |
+| IWM | 0.40166 | $256.61 | $103.07 |
+| GLD | 0.319513 | $324.38 | $103.64 |
+| JPM | 0.331395 | $310.53 | $102.91 |
+| SPY | 0.149279 | $698.00 | $104.20 |
 
 Last fills:
 
@@ -104,14 +104,14 @@ _6 strategies from the 6-month top 10 (Bollinger, Turtle BTC, Connors SPY + cryp
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| META | 0.0289825 | $566.83 | $16.43 |
-| SPY | 0.151412 | $694.60 | $105.17 |
-| XLE | 0.282516 | $60.75 | $17.16 |
-| DIA | 0.0359569 | $483.11 | $17.37 |
-| IWM | 0.0667932 | $258.06 | $17.24 |
-| MSFT | 0.0354779 | $485.15 | $17.21 |
-| GLD | 0.0534177 | $324.03 | $17.31 |
-| JPM | 0.0558454 | $311.27 | $17.38 |
+| META | 0.0289825 | $569.32 | $16.50 |
+| SPY | 0.151412 | $698.00 | $105.69 |
+| XLE | 0.282516 | $60.51 | $17.10 |
+| DIA | 0.0359569 | $481.08 | $17.30 |
+| IWM | 0.0667932 | $256.61 | $17.14 |
+| MSFT | 0.0354779 | $487.89 | $17.31 |
+| GLD | 0.0534177 | $324.38 | $17.33 |
+| JPM | 0.0558454 | $310.53 | $17.34 |
 
 Last fills:
 
@@ -126,11 +126,11 @@ _5 x EUR 25 crypto: sell at +30%, stop-loss at -40%_ · order label `manual25-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| ETH/USD | 0.0148009 | $1,619.76 | $23.97 |
-| SOL/USD | 0.372449 | $68.81 | $25.63 |
+| ETH/USD | 0.0148009 | $1,618.10 | $23.95 |
+| SOL/USD | 0.372449 | $69.06 | $25.72 |
 | DOGE/USD | 447.633 | $0.052920 | $23.69 |
-| XRP/USD | 28.4314 | $0.914760 | $26.01 |
-| AVAX/USD | 3.48572 | $6.59 | $22.96 |
+| XRP/USD | 28.4314 | $0.912701 | $25.95 |
+| AVAX/USD | 3.48572 | $6.56 | $22.86 |
 
 Last fills:
 

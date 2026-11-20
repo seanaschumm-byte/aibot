@@ -7,3 +7,5 @@
 {"time": "2026-11-19T15:15:22+00:00", "event": "entry", "cid": "BOLL-GLD-2026-11-19", "sleeve": "BOLL", "symbol": "GLD", "price": 339.026, "usd": 18.12}
 {"time": "2026-11-19T15:15:22+00:00", "event": "entry", "cid": "BOLL-JPM-2026-11-19", "sleeve": "BOLL", "symbol": "JPM", "price": 324.288, "usd": 18.12}
 {"time": "2026-11-19T20:38:15+00:00", "event": "entry", "cid": "CONN_SPY-SPY-2026-11-19", "sleeve": "CONN_SPY", "symbol": "SPY", "price": 717.254, "usd": 90.68}
+{"time": "2026-11-20T15:14:02+00:00", "event": "entry", "cid": "BOLL-SPY-2026-11-20", "sleeve": "BOLL", "symbol": "SPY", "price": 714.438, "usd": 17.87}
+{"time": "2026-11-20T15:14:02+00:00", "event": "close", "cid": "FABER-SPY-2026-11-16", "sleeve": "FABER", "symbol": "SPY", "pnl_pct": -0.0407}

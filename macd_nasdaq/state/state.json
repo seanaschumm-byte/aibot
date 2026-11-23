@@ -8,12 +8,21 @@
     "half": false,
     "opened": "2026-11-16",
     "why": "core weekly buy"
+   },
+   {
+    "qty": 0.105287503,
+    "entry": 644.236,
+    "peak": 644.236,
+    "half": false,
+    "opened": "2026-11-23",
+    "why": "core weekly buy"
    }
   ],
   "closed": [],
   "signal_day": null,
   "deposit_weeks": [
-   "2026W47"
+   "2026W47",
+   "2026W48"
   ],
   "sold": null
  },
@@ -26,12 +35,21 @@
     "half": false,
     "opened": "2026-11-17",
     "why": "12% dip under the 3-month high"
+   },
+   {
+    "qty": 0.070194719,
+    "entry": 644.208,
+    "peak": 644.208,
+    "half": false,
+    "opened": "2026-11-23",
+    "why": "weekly buy: new deposit + money from earlier sales (in a dip)"
    }
   ],
   "closed": [],
-  "signal_day": "2026-11-20",
+  "signal_day": "2026-11-23",
   "deposit_weeks": [
-   "2026W47"
+   "2026W47",
+   "2026W48"
   ]
  }
 }

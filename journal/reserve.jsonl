@@ -13,3 +13,4 @@
 {"time": "2026-11-21T09:15:40+00:00", "event": "close", "cid": "rsv-S-LINK-1795249581", "symbol": "LINK/USD", "pnl_usd": -1.4857, "pnl_pct": -0.0548, "closed": "2026-11-21T08:26:21.431143Z"}
 {"time": "2026-11-21T09:15:40+00:00", "event": "close", "cid": "rsv-S-AVAX-1795249581", "symbol": "AVAX/USD", "pnl_usd": -4.5626, "pnl_pct": -0.0846, "closed": "2026-11-21T08:26:21.47592Z"}
 {"time": "2026-11-23T15:39:56+00:00", "event": "close", "cid": "rsv-S-SOL-1795444358", "symbol": "SOL/USD", "pnl_usd": 6.1404, "pnl_pct": 0.1137, "closed": "2026-11-23T14:32:38.563905Z"}
+{"time": "2026-11-23T17:39:51+00:00", "event": "close", "cid": "rsv-S-XRP-1795451857", "symbol": "XRP/USD", "pnl_usd": 1.83, "pnl_pct": 0.0674, "closed": "2026-11-23T16:37:37.768253Z"}

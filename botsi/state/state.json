@@ -2,19 +2,30 @@
  "BTC": {
   "lots": [],
   "closed": [],
-  "signal_day": "2026-11-23",
+  "signal_day": "2026-11-24",
   "deposit_weeks": []
  },
  "ETH": {
   "lots": [],
   "closed": [],
-  "signal_day": "2026-11-23",
+  "signal_day": "2026-11-24",
   "deposit_weeks": []
  },
  "SOL": {
-  "lots": [],
+  "lots": [
+   {
+    "qty": 2.9284153102575003,
+    "entry": 72.304,
+    "peak": 72.304,
+    "half": false,
+    "opened": "2026-11-24",
+    "why": "MACD buy signal"
+   }
+  ],
   "closed": [],
-  "signal_day": "2026-11-23",
-  "deposit_weeks": []
+  "signal_day": "2026-11-24",
+  "deposit_weeks": [
+   "2026W48"
+  ]
  }
 }

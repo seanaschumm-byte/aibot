@@ -11,3 +11,4 @@
 {"time": "2026-11-20T15:14:02+00:00", "event": "close", "cid": "FABER-SPY-2026-11-16", "sleeve": "FABER", "symbol": "SPY", "pnl_pct": -0.0407}
 {"time": "2026-11-23T15:25:26+00:00", "event": "close", "cid": "DIP8-META-2026-11-16", "sleeve": "DIP8", "symbol": "META", "pnl_pct": -0.0524}
 {"time": "2026-11-23T15:25:26+00:00", "event": "entry", "cid": "DIP8-AMZN-2026-11-23", "sleeve": "DIP8", "symbol": "AMZN", "price": 257.81, "usd": 21.22}
+{"time": "2026-11-24T15:22:30+00:00", "event": "close", "cid": "CONN_SPY-SPY-2026-11-19", "sleeve": "CONN_SPY", "symbol": "SPY", "pnl_pct": -0.0015}

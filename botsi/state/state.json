@@ -2,13 +2,13 @@
  "BTC": {
   "lots": [],
   "closed": [],
-  "signal_day": "2026-11-24",
+  "signal_day": "2026-11-25",
   "deposit_weeks": []
  },
  "ETH": {
   "lots": [],
   "closed": [],
-  "signal_day": "2026-11-24",
+  "signal_day": "2026-11-25",
   "deposit_weeks": []
  },
  "SOL": {
@@ -23,7 +23,7 @@
    }
   ],
   "closed": [],
-  "signal_day": "2026-11-24",
+  "signal_day": "2026-11-25",
   "deposit_weeks": [
    "2026W48"
   ]

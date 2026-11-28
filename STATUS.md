@@ -1,17 +1,17 @@
-# Bot status: 28-11-2026 12:36 (Dutch time)
+# Bot status: 28-11-2026 13:38 (Dutch time)
 
-Alpaca paper account: equity **$99,943.10**, cash $96,869.27. All bots share this account; below it is split per bot.
+Alpaca paper account: equity **$99,945.66**, cash $96,869.27. All bots share this account; below it is split per bot.
 
 | Bot | Bought | Sold | Holding now | Profit / loss | Buys | Open orders | Last fill |
 |---|---|---|---|---|---|---|---|
-| $ Bot 5 - Smart Reserve | $324.28 | $164.11 | $155.73 | 🔴 $-4.44 (-1.4%) | 12 | 0 | 23-11 17:37 |
+| $ Bot 5 - Smart Reserve | $324.28 | $164.11 | $156.05 | 🔴 $-4.12 (-1.3%) | 12 | 0 | 23-11 17:37 |
 | Sean Lavarge | $339.56 | $0.00 | $338.77 | 🔴 $-0.79 (-0.2%) | 3 | 0 | 25-11 17:12 |
 | Sean Realistisch | $597.87 | $97.88 | $495.27 | 🔴 $-4.72 (-0.8%) | 4 | 0 | 19-11 21:45 |
 | MACD Nasdaq | $658.23 | $0.00 | $647.72 | 🔴 $-10.51 (-1.6%) | 4 | 0 | 23-11 15:53 |
-| Botsi | $638.05 | $0.00 | $622.39 | 🔴 $-15.66 (-2.5%) | 3 | 0 | 28-11 02:24 |
+| Botsi | $638.05 | $0.00 | $624.34 | 🔴 $-13.72 (-2.1%) | 3 | 0 | 28-11 02:24 |
 | Justin | $541.33 | $0.00 | $542.02 | 🟢 $+0.69 (+0.1%) | 5 | 0 | 20-11 15:57 |
 | AI trading bot Shakur | $347.28 | $194.90 | $146.46 | 🔴 $-5.92 (-1.7%) | 11 | 0 | 24-11 16:22 |
-| Manual trades | $140.85 | $0.00 | $125.48 | 🔴 $-15.38 (-10.9%) | 5 | 5 | 14-11 10:05 |
+| Manual trades | $140.85 | $0.00 | $125.76 | 🔴 $-15.09 (-10.7%) | 5 | 5 | 14-11 10:05 |
 
 Profit / loss = sold + current value of holdings − bought (after Alpaca's 0.25% crypto fee). Money a bot hasn't spent yet isn't counted.
 
@@ -20,9 +20,9 @@ _EUR 500 + EUR 100/week pot, EUR 25 per dip_ · order label `rsv-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| BTC/USD | 0.000861666 | $59,112.89 | $50.94 |
+| BTC/USD | 0.000861666 | $59,231.80 | $51.04 |
 | ADA/USD | 365.727 | $0.146170 | $53.46 |
-| ETH/USD | 0.0312328 | $1,643.50 | $51.33 |
+| ETH/USD | 0.0312328 | $1,650.67 | $51.56 |
 
 Last fills:
 
@@ -79,9 +79,9 @@ _plain MACD crossover on BTC/ETH/SOL (1/3 each); EUR 500 + EUR 100/week_ · orde
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| SOL/USD | 2.92842 | $70.81 | $207.37 |
-| ETH/USD | 0.12555 | $1,643.50 | $206.34 |
-| BTC/USD | 0.00353026 | $59,112.89 | $208.68 |
+| SOL/USD | 2.92842 | $71.03 | $207.99 |
+| ETH/USD | 0.12555 | $1,650.67 | $207.24 |
+| BTC/USD | 0.00353026 | $59,231.80 | $209.10 |
 
 Last fills:
 
@@ -135,10 +135,10 @@ _5 x EUR 25 crypto: sell at +30%, stop-loss at -40%_ · order label `manual25-`
 
 | Holding | Quantity | Price now | Value |
 |---|---|---|---|
-| ETH/USD | 0.0148009 | $1,643.50 | $24.33 |
-| SOL/USD | 0.372449 | $70.81 | $26.37 |
+| ETH/USD | 0.0148009 | $1,650.67 | $24.43 |
+| SOL/USD | 0.372449 | $71.03 | $26.45 |
 | DOGE/USD | 447.633 | $0.056778 | $25.42 |
-| XRP/USD | 28.4314 | $0.939200 | $26.70 |
+| XRP/USD | 28.4314 | $0.942821 | $26.81 |
 | AVAX/USD | 3.48572 | $6.50 | $22.66 |
 
 Last fills:
